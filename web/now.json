@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "name": "Spotify Cardio",
+    "alias": "spotifycardio.com",
+    "builds": [
+      { "src": "/static/*", "use": "@now/static" },
+      {
+        "src": "next.config.js",
+        "use": "@now/next"
+      }
+    ],
+    "routes": [
+    ],
+    "env": {
+      "CONSUMER_KEY": "@consumer_key",
+      "CONSUMER_SECRET": "@consumer_secret"
+    }
+  }
+  
