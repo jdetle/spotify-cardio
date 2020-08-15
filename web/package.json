@@ -21,9 +21,12 @@
     "tslint": "./node_modules/.bin/tslint -c tslint.json -p tsconfig.json"
   },
   "dependencies": {
+    "@types/styled-components": "^5.1.2",
     "nextjs-dynamic-routes": "^2.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-fns": "^1.4.0",
+    "styled-components": "^5.1.1",
     "tailwind": "^4.0.0"
   },
   "devDependencies": {
