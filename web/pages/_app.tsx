@@ -76,6 +76,10 @@ const AuthProvider: React.FC = ({ children }) => {
         verifier,
         token,
         setToken: (token: SpotifyTokenType) => {
+          localStorage?.setItem("spotify-auth-state", "");
+          localStorage?.setItem("spotify-verifier", "");
+          setAuthState("");
+          setVerifier("");
           setToken(token);
           localStorage?.setItem("spotify-token", JSON.stringify(token));
         },
