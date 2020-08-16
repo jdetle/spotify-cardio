@@ -3,7 +3,7 @@ import { useEffect, useContext } from "react";
 import { AuthContext } from "./_app";
 
 const Callback = () => {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
 
   const { verifier, authState, setToken, token } = useContext(AuthContext);
   useEffect(() => {
@@ -27,6 +27,7 @@ const Callback = () => {
           );
           if (authorizationResp.status === 200) {
             setToken(await authorizationResp.json());
+            push("/authenticated");
           }
         } catch (e) {
           // console.log(e);

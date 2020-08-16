@@ -1,5 +1,27 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 
+const scopes = [
+  "ugc-image-upload",
+  "user-read-playback-state",
+  "user-modify-playback-state",
+  "user-read-currently-playing",
+  "streaming",
+  "app-remote-control",
+  "user-read-email",
+  "user-read-private",
+  "playlist-read-collaborative",
+  "playlist-modify-public",
+  "playlist-read-private",
+  "playlist-modify-private",
+  "user-library-modify",
+  "user-library-read",
+  "user-top-read",
+  "user-read-playback-position",
+  "user-read-recently-played",
+  "user-follow-read",
+  "user-follow-modify",
+];
+
 const login = async (req: NowRequest) => {
   console.log(req.query);
   const state = req.query.state as string;
@@ -20,6 +42,7 @@ const login = async (req: NowRequest) => {
         code_challenge_method: "S256",
         state,
         code_challenge,
+        scope: scopes.join(" "),
       })
     );
     return qps.toString();

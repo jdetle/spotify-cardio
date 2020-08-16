@@ -4,7 +4,7 @@ import { WindowSize } from "react-fns";
 import { App as AppWrapper } from "../components/app";
 import Layout from "../components/layout";
 
-type SpotifyTokenType = {
+export type SpotifyTokenType = {
   access_token: string;
   token_type: string;
   scope: string;
@@ -12,8 +12,9 @@ type SpotifyTokenType = {
   refresh_token: string;
 };
 
-type SpotifyErrorTokenType = {
+export type SpotifyErrorTokenType = {
   error: string;
+  error_description: string;
 };
 
 export const AuthContext = React.createContext<{
@@ -59,7 +60,7 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   }, [token]);
 
-  console.log(token);
+  console.log("token", token);
 
   return (
     <AuthContext.Provider
