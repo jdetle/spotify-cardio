@@ -47,10 +47,10 @@ export default (request: NowRequest, res: NowResponse) => {
   }
   getToken(request)
     .then((data) => {
-      res.end(JSON.stringify(data));
+      res.send(JSON.stringify(data));
     })
     .catch((e) => {
       console.error(e);
-      res.end("Error");
+      res.send("Error");
     });
 };

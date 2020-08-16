@@ -7,5 +7,5 @@ function generateCodeVerifier() {
 
 export default (_: NowRequest, res: NowResponse) => {
   const c = generateCodeVerifier();
-  res.end(c);
+  res.send(c);
 };

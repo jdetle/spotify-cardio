@@ -1,5 +1,4 @@
 import { NowRequest, NowResponse } from "@vercel/node";
-var crypto = require("crypto");
 
 const login = async (req: NowRequest) => {
   console.log(req.query);
@@ -41,10 +40,10 @@ const login = async (req: NowRequest) => {
 export default (request: NowRequest, res: NowResponse) => {
   login(request)
     .then((data) => {
-      res.end(data?.url);
+      res.send(data?.url);
     })
     .catch((e) => {
       console.error(e);
-      res.end("Error");
+      res.send("Error");
     });
 };

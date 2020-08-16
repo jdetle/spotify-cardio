@@ -22,12 +22,14 @@
   },
   "dependencies": {
     "@types/styled-components": "^5.1.2",
+    "@types/uuid": "^8.3.0",
     "@vercel/node": "^1.7.4",
     "nextjs-dynamic-routes": "^2.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-fns": "^1.4.0",
-    "styled-components": "^5.1.1"
+    "styled-components": "^5.1.1",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

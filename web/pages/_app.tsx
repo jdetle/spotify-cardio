@@ -1,5 +1,5 @@
 import App from "next/app";
-import React, { SetStateAction, Dispatch, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { WindowSize } from "react-fns";
 import { App as AppWrapper } from "../components/app";
 import Layout from "../components/layout";
@@ -12,22 +12,28 @@ type SpotifyTokenType = {
   refresh_token: string;
 };
 
+type SpotifyErrorTokenType = {
+  error: string;
+};
+
 export const AuthContext = React.createContext<{
   authState: string;
-  setVerifier: Dispatch<SetStateAction<string>>;
+  setVerifier: (str: string) => void;
+  setAuthState: (str: string) => void;
   verifier: string;
-  token: SpotifyTokenType | null;
-  setToken: Dispatch<SetStateAction<SpotifyTokenType | null>>;
+  token: SpotifyTokenType | SpotifyErrorTokenType | null;
+  setToken: (str: SpotifyTokenType) => void;
 }>({
   authState: "",
   setVerifier: () => null,
+  setAuthState: () => null,
   verifier: "",
   token: null,
   setToken: () => null,
 });
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [authState /*setAuthState*/] = useState<string>("abc123");
+  const [authState, setAuthState] = useState<string>("");
   const [verifier, setVerifier] = useState<string>("");
   const [token, setToken] = useState<SpotifyTokenType | null>(null);
 
@@ -37,9 +43,43 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   }, [verifier]);
 
+  useEffect(() => {
+    if (authState == "" && localStorage) {
+      setAuthState(localStorage?.getItem("spotify-auth-state") ?? "");
+    }
+  }, [authState]);
+
+  useEffect(() => {
+    if (token == null && localStorage) {
+      const stringifiedToken = localStorage?.getItem("spotify-token");
+      if (stringifiedToken) {
+        const parsed = JSON.parse(stringifiedToken);
+        setToken(parsed);
+      }
+    }
+  }, [token]);
+
+  console.log(token);
+
   return (
     <AuthContext.Provider
-      value={{ authState, setVerifier, verifier, token, setToken }}
+      value={{
+        authState,
+        setAuthState: (str: string) => {
+          setAuthState(str);
+          localStorage?.setItem("spotify-auth-state", str);
+        },
+        setVerifier: (str: string) => {
+          setVerifier(str);
+          localStorage?.setItem("spotify-verifier", str);
+        },
+        verifier,
+        token,
+        setToken: (token: SpotifyTokenType) => {
+          setToken(token);
+          localStorage?.setItem("spotify-token", JSON.stringify(token));
+        },
+      }}
     >
       {children}
     </AuthContext.Provider>
