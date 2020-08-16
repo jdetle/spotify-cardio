@@ -15,19 +15,19 @@
     "debug": "npm run build:next && cross-env NODE_ENV=development nodemon --inspect server.ts -p $PORT",
     "build": "npm run clean && npm run build:next && npm run build:server",
     "build:next": "next build",
-    "build:server": "cp ./server.ts .next/server.ts && cp ./routes.ts .next/routes.ts && cp -r static .next/static",
+    "build:server": "cp ./server.ts .next/server.ts && cp ./routes.ts .next/routes.ts && cp -r public .next/public",
     "start": "cross-env NODE_ENV=production node server.ts -p $PORT",
     "test": "jest",
     "tslint": "./node_modules/.bin/tslint -c tslint.json -p tsconfig.json"
   },
   "dependencies": {
     "@types/styled-components": "^5.1.2",
+    "@vercel/node": "^1.7.4",
     "nextjs-dynamic-routes": "^2.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-fns": "^1.4.0",
-    "styled-components": "^5.1.1",
-    "tailwind": "^4.0.0"
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -42,7 +42,7 @@
     "@zeit/next-typescript": "^1.1.1",
     "babel-plugin-transform-define": "^1.3.1",
     "cross-env": "^5.2.0",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "husky": "^1.2.1",
     "jest": "^23.6.0",
     "lint-staged": "^8.1.0",
