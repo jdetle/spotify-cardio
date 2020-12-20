@@ -1,4 +1,3 @@
-import { Container } from "next/app";
 import { useContext, useEffect } from "react";
 import { AuthContext, SpotifyTokenType } from "./_app";
 
