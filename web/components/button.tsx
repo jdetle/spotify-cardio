@@ -8,14 +8,16 @@ export default styled.a<{ primary?: boolean; xl?: boolean; active?: boolean }>`
   border-radius: 0.25rem;
   padding: 0rem 0;
   margin: 0.5rem 1rem;
-  height: 4rem;
+  height: 10rem;
   font-size: 2rem;
   font-weight: 600;
-  width: 11rem;
+  width: 20rem;
   background: transparent;
   color: white;
   border: 0.2rem solid white;
   text-decoration: none;
+  padding: 2rem;
+
   z-index: 1;
   @media (max-width: 420px) {
     font-size: 1rem;
@@ -37,7 +39,7 @@ export default styled.a<{ primary?: boolean; xl?: boolean; active?: boolean }>`
     props.primary &&
     css`
       background: white;
-      color: palevioletred;
+      color: ${props.theme.green1};
     `}
   ${(props) =>
     props.xl &&

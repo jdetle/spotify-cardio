@@ -58,6 +58,7 @@
     "tslint-config-prettier": "^1.17.0",
     "tslint-plugin-prettier": "^2.0.1",
     "tslint-react": "^3.6.0",
+    "type-fest": "^0.20.2",
     "typescript": "^3.9.7",
     "webpack-bundle-analyzer": "^3.0.3"
   }

@@ -34,23 +34,30 @@ const Layout = styled.div`
   }
 `;
 
-export default ({ children, title = "spotify cardio" }) => (
-  <Layout>
-    <Head>
-      <title>{title}</title>
-    </Head>
-    <StyledHeader
-      aria-label="Header containing links to Home, buzzwords, and about page"
-      tabIndex={0}
-    >
-      <nav role="navigation">
-        <Link href="/">
-          <T.a aria-label={"Link to the home page"} tabIndex={0}>
-            Home
-          </T.a>
-        </Link>
+const LayoutWithChildren = ({
+  children,
+  title = "spotify cardio",
+  ...rest
+}) => {
+  console.log(rest);
 
-        {/*
+  return (
+    <Layout>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <StyledHeader
+        aria-label="Header containing links to Home, buzzwords, and about page"
+        tabIndex={0}
+      >
+        <nav role="navigation">
+          <Link href="/">
+            <T.a aria-label={"Link to the home page"} tabIndex={0}>
+              Home
+            </T.a>
+          </Link>
+
+          {/*
         <span>{" // "}</span>
         <Link href="/about">
           <T.a aria-label={"Link to the about button"} tabIndex={0}>
@@ -58,11 +65,13 @@ export default ({ children, title = "spotify cardio" }) => (
           </T.a>
         </Link>
         */}
-      </nav>
-    </StyledHeader>
-    <div style={{ height: "100%" }}>{children}</div>
-    <StyledFooter role="contentinfo">
-      {"All rights reserved: John Detlefs 2018"}
-    </StyledFooter>
-  </Layout>
-);
+        </nav>
+      </StyledHeader>
+      <div style={{ height: "100%" }}>{children}</div>
+      <StyledFooter role="contentinfo">
+        {`All rights reserved: John Detlefs ${new Date().getFullYear()}`}
+      </StyledFooter>
+    </Layout>
+  );
+};
+export default LayoutWithChildren;

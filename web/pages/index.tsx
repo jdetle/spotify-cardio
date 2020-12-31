@@ -48,6 +48,7 @@ const Landing = () => {
 
     getLink();
   }, []);
+
   return (
     <div>
       <Container direction={"column"} center>
@@ -56,7 +57,9 @@ const Landing = () => {
         </div>
       </Container>
       <Container direction={"column"} center>
-        <Button href={loginLink}>Auth with spotify</Button>
+        <Button href={loginLink}>
+          Authenticate with Spotify To Get Started
+        </Button>
       </Container>
     </div>
   );

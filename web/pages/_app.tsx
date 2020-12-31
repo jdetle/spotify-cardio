@@ -1,6 +1,9 @@
 import App from "next/app";
 import React, { useState, useEffect } from "react";
 import { WindowSize } from "react-fns";
+import { MergeExclusive } from "type-fest";
+
+import { ThemeProvider } from "styled-components";
 import { App as AppWrapper } from "../components/app";
 import Layout from "../components/layout";
 
@@ -17,13 +20,18 @@ export type SpotifyErrorTokenType = {
   error_description: string;
 };
 
+export type TokenTypes = MergeExclusive<
+  MergeExclusive<SpotifyErrorTokenType, SpotifyTokenType>,
+  null
+>;
+
 export const AuthContext = React.createContext<{
   authState: string;
   setVerifier: (str: string) => void;
   setAuthState: (str: string) => void;
   verifier: string;
-  token: SpotifyTokenType | SpotifyErrorTokenType | null;
-  setToken: (str: SpotifyTokenType) => void;
+  token: TokenTypes;
+  setToken: (token: TokenTypes) => void;
 }>({
   authState: "",
   setVerifier: () => null,
@@ -32,6 +40,26 @@ export const AuthContext = React.createContext<{
   token: null,
   setToken: () => null,
 });
+
+const FIGMA_PALETTE = {
+  gray1: "#191414",
+  gray2: "#4F4f4F",
+  gray3: "#828282",
+  gray4: "#BDBDBD",
+  gray5: "#E0E0E0",
+  gray6: "#F2F2F2",
+  red: "#EB5757",
+  orange: "#F2994A",
+  yellow: "#F2C94C",
+  green1: "#1AB26B",
+  green2: "#27AE60",
+  green3: "#1ED760",
+  blue1: "#2F80ED",
+  blue2: "#2D9CDB",
+  blue3: "#56CCF2",
+  purple1: "#9B51E0",
+  purple2: "#BB6BD9",
+};
 
 const AuthProvider: React.FC = ({ children }) => {
   const [authState, setAuthState] = useState<string>("");
@@ -96,20 +124,22 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <AppWrapper>
-        <AuthProvider>
-          <WindowSize>
-            {(size) => (
-              <Layout>
-                <Component
-                  {...pageProps}
-                  size={size.width > 0 ? { ...size } : null}
-                />
-              </Layout>
-            )}
-          </WindowSize>
-        </AuthProvider>
-      </AppWrapper>
+      <ThemeProvider theme={FIGMA_PALETTE}>
+        <AppWrapper>
+          <AuthProvider>
+            <WindowSize>
+              {(size) => (
+                <Layout>
+                  <Component
+                    {...pageProps}
+                    size={size.width > 0 ? { ...size } : null}
+                  />
+                </Layout>
+              )}
+            </WindowSize>
+          </AuthProvider>
+        </AppWrapper>
+      </ThemeProvider>
     );
   }
 }
