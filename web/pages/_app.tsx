@@ -5,6 +5,7 @@ import { MergeExclusive } from "type-fest";
 
 import { ThemeProvider } from "styled-components";
 import { App as AppWrapper } from "../components/app";
+import WebPlayback from "../components/web-playback";
 import Layout from "../components/layout";
 
 export type SpotifyTokenType = {
@@ -88,8 +89,6 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   }, [token]);
 
-  console.log("token", token);
-
   return (
     <AuthContext.Provider
       value={{
@@ -127,16 +126,18 @@ class MyApp extends App {
       <ThemeProvider theme={FIGMA_PALETTE}>
         <AppWrapper>
           <AuthProvider>
-            <WindowSize>
-              {(size) => (
-                <Layout>
-                  <Component
-                    {...pageProps}
-                    size={size.width > 0 ? { ...size } : null}
-                  />
-                </Layout>
-              )}
-            </WindowSize>
+            <WebPlayback>
+              <WindowSize>
+                {(size) => (
+                  <Layout>
+                    <Component
+                      {...pageProps}
+                      size={size.width > 0 ? { ...size } : null}
+                    />
+                  </Layout>
+                )}
+              </WindowSize>
+            </WebPlayback>
           </AuthProvider>
         </AppWrapper>
       </ThemeProvider>

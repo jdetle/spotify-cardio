@@ -39,8 +39,6 @@ const LayoutWithChildren = ({
   title = "spotify cardio",
   ...rest
 }) => {
-  console.log(rest);
-
   return (
     <Layout>
       <Head>

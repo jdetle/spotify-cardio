@@ -25,6 +25,7 @@ const Callback = () => {
           const authorizationResp = await fetch(
             `/api/spotify-challenge?code=${query.code}&code_verifier=${verifier}`
           );
+          console.log(authorizationResp);
           if (authorizationResp.status === 200) {
             setToken(await authorizationResp.json());
             push("/authenticated");
@@ -38,7 +39,7 @@ const Callback = () => {
   }, [query, verifier]);
 
   useEffect(() => {
-    console.log(token);
+    console.log("token in callback effect", token);
   }, [token]);
 
   return <div />;

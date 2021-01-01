@@ -5,7 +5,6 @@ import styled, { createGlobalStyle } from "styled-components";
 const StyledApp = styled.div`
   height: 100%;
   color: ${(props) => {
-    console.log(props);
     return props.theme.green1;
   }};
   background: ${(props) => props.theme.gray6};
