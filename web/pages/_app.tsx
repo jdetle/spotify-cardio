@@ -5,7 +5,7 @@ import { MergeExclusive } from "type-fest";
 
 import { ThemeProvider } from "styled-components";
 import { App as AppWrapper } from "../components/app";
-import WebPlayback from "../components/web-playback";
+import WebPlayback from "../contexts/web-playback";
 import Layout from "../components/layout";
 
 export type SpotifyTokenType = {

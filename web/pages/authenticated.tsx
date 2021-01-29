@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { AuthContext, SpotifyTokenType } from "./_app";
-import { PlayerContext } from "./../components/web-playback";
+import { PlayerContext } from "../contexts/web-playback";
+import SearchUI from "components/search-ui";
 
 const BASE_URL = "https://api.spotify.com/v1";
 
@@ -92,7 +93,11 @@ export const AuthLanding = () => {
     };
     getUser();
   }, [token]);
-  return <div>hello</div>;
+  return (
+    <section>
+      <SearchUI />
+    </section>
+  );
 };
 
 export default AuthLanding;

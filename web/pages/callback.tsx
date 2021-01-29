@@ -42,7 +42,7 @@ const Callback = () => {
     console.log("token in callback effect", token);
   }, [token]);
 
-  return <div />;
+  return <></>;
 };
 
 export default Callback;

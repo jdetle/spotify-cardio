@@ -10,7 +10,6 @@ const PlaybackEnabler: React.FC = ({ children }) => {
   const { token } = useContext(AuthContext);
   const [playerInstance, setPlayer] = useState<PlayerInstance | null>(null);
   useEffect(() => {
-    console.log("token in player", token);
     if (token) {
       window.onSpotifyWebPlaybackSDKReady = () => {
         // @ts-ignore

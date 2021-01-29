@@ -42,7 +42,7 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
             content="A summary of the top 20 words in the internet of things."
           />
         </Head>
-        <body tabIndex={0}>
+        <body>
           <Main />
           <NextScript />
         </body>
