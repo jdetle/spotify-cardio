@@ -1,14 +1,14 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 
 const scopes = [
-  // "ugc-image-upload",
+  "ugc-image-upload",
   "user-read-playback-state",
   "user-modify-playback-state",
   "user-read-currently-playing",
   "streaming",
   "app-remote-control",
   "user-read-email",
-  //"user-read-private",
+  "user-read-private",
   "playlist-read-collaborative",
   "playlist-modify-public",
   "playlist-read-private",
@@ -18,8 +18,8 @@ const scopes = [
   "user-top-read",
   "user-read-playback-position",
   "user-read-recently-played",
-  //"user-follow-read",
-  //"user-follow-modify",
+  "user-follow-read",
+  "user-follow-modify",
 ];
 
 const login = async (req: NowRequest) => {

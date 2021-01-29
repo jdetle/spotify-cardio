@@ -1,7 +1,10 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 
 type ItemType = "album" | "artist" | "playlist" | "track" | "show" | "episode";
-export type SearchResultType = {};
+export type SearchResultType = {
+  external_urls: any;
+  name: string;
+};
 
 type SearchQueryParams = {
   q: string;
