@@ -9,6 +9,7 @@ import {
 import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
 import { PlayerContext } from "../contexts/web-playback";
 import Components from "./../components";
+import { useRouter } from "next/router";
 
 const {
   Button,
@@ -39,7 +40,6 @@ const SearchTypeResultBox: React.FC<ITableState<TracksSearchResponseType>> = ({
   data,
   error,
 }) => {
-  console.log(loading, data, error);
   return <TrackSearchList>{children}</TrackSearchList>;
 };
 
@@ -55,7 +55,7 @@ interface ITableState<DataType> {
 }
 
 export function useTableState<DataType>(
-  fetch: FetchType<DataType>,
+  dataFetch: FetchType<DataType>,
   token: TokenTypes
 ) {
   const initialState: ITableState<DataType> = {
@@ -83,11 +83,11 @@ export function useTableState<DataType>(
 
   useEffect(() => {
     let isSubscribed = true;
-    dispatch({ type: "toggleLoading" });
 
     const updateTableView = async () => {
+      dispatch({ type: "toggleLoading" });
       try {
-        const { data, error } = await fetch(token);
+        const { data, error } = await dataFetch(token);
         if (isSubscribed) {
           if (data) {
             dispatch({ type: "setData", payload: data });
@@ -105,7 +105,7 @@ export function useTableState<DataType>(
     return () => {
       isSubscribed = false;
     };
-  }, [fetch]);
+  }, [dataFetch]);
 
   return useMemo(() => tableState, [tableState]);
 }
@@ -113,25 +113,24 @@ export function useTableState<DataType>(
 const SearchUI: React.FC = ({}) => {
   const { token } = useContext(AuthContext);
   const [query, setQuery] = useState<string>("");
+  const [submitCount, setSubmitCount] = useState<number>(0);
 
-  const search = useCallback(async (token: SpotifyTokenType | null) => {
-    if (token == null) return new Error("No token");
-    try {
-      const response = await fetch(`/api/search`, {
-        method: "POST",
-        body: JSON.stringify({ query, token }),
-      });
+  const search = useCallback(
+    async (token: SpotifyTokenType | null) => {
+      if (token == null) return Promise.reject("No token present");
       try {
-        const results = await response.json();
-        console.log(results);
-        return { data: results as TracksSearchResponseType };
-      } catch (error) {
-        return error;
+        const response = await fetch(`/api/search`, {
+          method: "POST",
+          body: JSON.stringify({ query, token }),
+        });
+        const json = await response.json();
+        return { data: json as TracksSearchResponseType };
+      } catch (e) {
+        return e;
       }
-    } catch (error) {
-      return error;
-    }
-  }, []);
+    },
+    [submitCount]
+  );
 
   const { loading, data, error } = useTableState<TracksSearchResponseType>(
     search,
@@ -143,6 +142,7 @@ const SearchUI: React.FC = ({}) => {
       <Form
         onSubmit={(e) => {
           e.preventDefault();
+          setSubmitCount((c) => ++c);
         }}
         id="search"
         role="search"
@@ -162,7 +162,7 @@ const SearchUI: React.FC = ({}) => {
         <Input value="Submit" type="submit" />
       </Form>
       <SearchTypeResultBox data={data} loading={loading} error={error}>
-        {data?.tracks.items.map((item, i) => {
+        {data?.tracks?.items.map((item, i) => {
           return (
             <SearchResult {...item} key={i}>
               {item.name}
@@ -174,44 +174,10 @@ const SearchUI: React.FC = ({}) => {
   );
 };
 
-const getRefreshedToken = async (token: TokenTypes) => {
-  if (token?.refresh_token) {
-    const getParams = async () => {
-      const client_id = process.env.SPOTIFY_CLIENT_ID;
-      if (!client_id) {
-        throw new Error("No client id");
-      }
-      return new URLSearchParams(
-        Object.entries({
-          client_id,
-          grant_type: "refresh_token",
-          refresh_token: token.refresh_token,
-        })
-      ).toString();
-    };
-
-    const params = await getParams();
-    const url = `https://accounts.spotify.com/api/token?${params}`;
-
-    const requestHeaders = new Headers();
-    requestHeaders.set("Content-Type", "application/x-www-form-urlencoded");
-    try {
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: requestHeaders,
-      });
-      return await resp.json();
-    } catch (e) {
-      console.error(e);
-      return e;
-    }
-  }
-};
-
 export const PlaylistCreator = () => {
   const { token, setToken } = useContext(AuthContext);
   const { player } = useContext(PlayerContext);
-
+  const { push } = useRouter();
   useEffect(() => {
     const play = ({
       spotify_uri,
@@ -244,16 +210,24 @@ export const PlaylistCreator = () => {
           });
           const user = await resp.json();
           if (user.error && user.error.status == 401) {
-            const refreshedToken = await getRefreshedToken(authToken);
+            const response = await fetch("/api/refresh", {
+              method: "POST",
+              body: JSON.stringify({ refresh_token: authToken.refresh_token }),
+            });
+            console.log(response);
+            const refreshedToken = await response.json();
             setToken(refreshedToken);
           }
         } catch (e) {
-          console.error("error", e);
+          console.error(e);
+          //push("/");
         }
       }
     };
     getUser();
   }, [token]);
+
+  console.log(token);
   return (
     <section>
       <SearchUI />

@@ -23,7 +23,6 @@ const scopes = [
 ];
 
 const login = async (req: NowRequest) => {
-  console.log(req.query);
   const state = req.query.state as string;
   const code_challenge = req.query.code_challenge as string;
   const getParams = async () => {
@@ -52,7 +51,6 @@ const login = async (req: NowRequest) => {
   const url = `https://accounts.spotify.com/authorize?${params}`;
   try {
     const resp = await fetch(url, { method: "GET", redirect: "follow" });
-    console.log(resp.status);
     return resp;
   } catch (e) {
     console.error(e);

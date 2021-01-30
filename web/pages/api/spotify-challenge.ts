@@ -3,7 +3,6 @@ import { NowRequest, NowResponse } from "@vercel/node";
 const getToken = async (req: NowRequest) => {
   const code = req.query.code as string;
   const code_verifier = req.query.code_verifier as string;
-  console.log("in get token", code_verifier);
 
   const getParams = async () => {
     const client_id = process.env.SPOTIFY_CLIENT_ID;
