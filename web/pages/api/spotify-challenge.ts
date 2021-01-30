@@ -33,7 +33,6 @@ const getToken = async (req: NowRequest) => {
       method: "POST",
       headers: requestHeaders,
     });
-    console.log(resp.status);
     return await resp.json();
   } catch (e) {
     console.error(e);

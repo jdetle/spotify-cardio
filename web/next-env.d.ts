@@ -1,6 +1,6 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
-type SearchResponseType = {
+type TracksSearchResponseType = {
   tracks: {
     href: string;
     items: Array<TrackType>;
@@ -13,7 +13,7 @@ type SearchResponseType = {
 };
 type AlbumType = {
   album_type: string;
-  artists: Array<unknown>;
+  artists: Array<ArtistType>;
   available_markets: Array<string>;
   external_urls: { spotify: string };
   href: string;

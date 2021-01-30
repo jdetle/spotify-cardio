@@ -1,11 +1,5 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 
-type ItemType = "album" | "artist" | "playlist" | "track" | "show" | "episode";
-export type SearchResultType = {
-  external_urls: any;
-  name: string;
-};
-
 type SearchQueryParams = {
   q: string;
   type: ItemType;
@@ -37,8 +31,7 @@ export default async (req: NowRequest, res: NowResponse) => {
       { headers }
     );
     try {
-      const results = await spotifyResponse.json();
-      console.log(results);
+      const results = (await spotifyResponse.json()) as TracksSearchResponseType;
       res.send(results);
     } catch (e) {
       res.send(e);

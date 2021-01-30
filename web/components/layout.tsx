@@ -39,11 +39,7 @@ const Layout = styled.div`
   }
 `;
 
-const LayoutWithChildren = ({
-  children,
-  title = "spotify cardio",
-  ...rest
-}) => {
+const LayoutWithChildren = ({ children, title = "spotify cardio" }) => {
   return (
     <Layout>
       <Head>
