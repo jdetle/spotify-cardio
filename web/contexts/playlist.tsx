@@ -21,7 +21,7 @@ export const PlaylistContext = createContext<PlaylistContextType>({
   insertTrack: null,
 });
 
-const PlaylistEnabler: React.FC = ({ children }) => {
+export const PlaylistEnabler: React.FC = ({ children }) => {
   const [playlist, setPlaylist] = useState<PlaylistType>([] as TrackType[]);
 
   const addTrack = useCallback((track: TrackType) => {

@@ -1,5 +1,5 @@
 import { NowRequest, NowResponse } from "@vercel/node";
-
+/*
 type SearchQueryParams = {
   q: string;
   type: ItemType;
@@ -8,6 +8,7 @@ type SearchQueryParams = {
   offset?: number;
   include_external?: string;
 };
+*/
 
 const SPOTIFY_URL = `https://api.spotify.com/v1`;
 
@@ -19,9 +20,11 @@ export default async (req: NowRequest, res: NowResponse) => {
   }
   const q = query;
   const type = "track";
+  const limit = 20;
   const qp = new URLSearchParams([
     ["q", q],
     ["type", type],
+    ["limit", limit],
   ]);
   try {
     const spotifyResponse = await fetch(

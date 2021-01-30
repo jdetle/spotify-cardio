@@ -1,4 +1,4 @@
-import {
+import React, {
   useCallback,
   useContext,
   useEffect,
@@ -10,38 +10,23 @@ import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
 import { PlayerContext } from "../contexts/web-playback";
 import Components from "./../components";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 
 const {
-  Button,
   Label,
   Form,
   TrackSearchList,
   TrackListItem,
-  Typography,
-  Header,
-  Footer,
-  Layout,
   Input,
+  Playbar,
+  PlaylistView,
 } = Components;
 
-const BASE_URL = "https://api.spotify.com/v1";
+const API_BASE_URL = "https://api.spotify.com/v1";
 
 type FetchType<DataType> = (
   token: TokenTypes | null
 ) => Promise<{ data: DataType | null; error: Error | null }>;
-
-const SearchResult: React.FC<TrackType> = ({ children }) => {
-  return <TrackListItem>{children}</TrackListItem>;
-};
-
-const SearchTypeResultBox: React.FC<ITableState<TracksSearchResponseType>> = ({
-  children,
-  loading,
-  data,
-  error,
-}) => {
-  return <TrackSearchList>{children}</TrackSearchList>;
-};
 
 type ActionType<DataType> =
   | { type: "toggleLoading" }
@@ -110,6 +95,34 @@ export function useTableState<DataType>(
   return useMemo(() => tableState, [tableState]);
 }
 
+const SearchInputContainer = styled.div`
+  height: 4rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: ${(p) => p.theme.colors.gray2};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-area: 1 / 1 / 2 / 5;
+  label {
+    font-weight: 500;
+    margin: 0px 10px 0px 10px;
+  }
+  input {
+    margin: 0px 10px 0px 10px;
+  }
+`;
+
+const SearchAndAddToPlaylistSection = styled.section`
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1rem repeat(2, 1fr) 1rem;
+  grid-template-rows: 5rem repeat(3, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 10px;
+`;
+
 const SearchUI: React.FC = ({}) => {
   const { token } = useContext(AuthContext);
   const [query, setQuery] = useState<string>("");
@@ -139,37 +152,38 @@ const SearchUI: React.FC = ({}) => {
 
   return (
     <>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmitCount((c) => ++c);
-        }}
-        id="search"
-        role="search"
-      >
-        <Label htmlFor="search-input">Search this site</Label>
-        <Input
-          type="search"
-          id="search-input"
-          role="search-input"
-          name="search"
-          spellCheck="false"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
+      <SearchInputContainer>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setSubmitCount((c) => ++c);
           }}
-        />
-        <Input value="Submit" type="submit" />
-      </Form>
-      <SearchTypeResultBox data={data} loading={loading} error={error}>
+          id="search"
+          role="search"
+        >
+          <Label htmlFor="search-input">
+            Search Tracks
+            <Input
+              type="search"
+              id="search-input"
+              role="search-input"
+              name="search"
+              spellCheck="false"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+              }}
+            />
+          </Label>
+          <Input value="Submit" type="submit" />
+        </Form>
+      </SearchInputContainer>
+
+      <TrackSearchList data={data} loading={loading} error={error}>
         {data?.tracks?.items.map((item, i) => {
-          return (
-            <SearchResult {...item} key={i}>
-              {item.name}
-            </SearchResult>
-          );
+          return <TrackListItem {...item} key={i} />;
         })}
-      </SearchTypeResultBox>
+      </TrackSearchList>
     </>
   );
 };
@@ -185,7 +199,7 @@ export const PlaylistCreator = () => {
         _options: { getOAuthToken, id },
       },
     }) => {
-      getOAuthToken((access_token) => {
+      getOAuthToken((access_token: string) => {
         fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
           method: "PUT",
           body: JSON.stringify({ uris: [spotify_uri] }),
@@ -205,7 +219,7 @@ export const PlaylistCreator = () => {
         try {
           const headers = new Headers();
           headers.set("Authorization", `Bearer ${authToken.access_token}`);
-          const resp = await fetch(`${BASE_URL}/me`, {
+          const resp = await fetch(`${API_BASE_URL}/me`, {
             headers,
           });
           const user = await resp.json();
@@ -214,24 +228,26 @@ export const PlaylistCreator = () => {
               method: "POST",
               body: JSON.stringify({ refresh_token: authToken.refresh_token }),
             });
-            console.log(response);
             const refreshedToken = await response.json();
+            console.log(refreshedToken);
             setToken(refreshedToken);
           }
         } catch (e) {
+          setToken(null);
           console.error(e);
-          //push("/");
+          push("/");
         }
       }
     };
     getUser();
   }, [token]);
 
-  console.log(token);
   return (
-    <section>
+    <SearchAndAddToPlaylistSection>
       <SearchUI />
-    </section>
+      <PlaylistView />
+      <Playbar />
+    </SearchAndAddToPlaylistSection>
   );
 };
 

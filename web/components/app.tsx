@@ -15,6 +15,7 @@ const StyledApp = styled.div`
     rgba(210, 213, 210, 1) 100%
   );
   overflow-x: hidden;
+  overflow-y: hidden;
   video,
   img {
     display: block;
@@ -53,7 +54,8 @@ html, body{
   height: 100%;
 }
 #__next {
-  height: 100%
+  height: 100%;  
+  overflow: hidden;
 }`;
 
 const App = (props) => {

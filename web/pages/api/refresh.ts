@@ -4,7 +4,6 @@ const getRefreshedToken = async (refresh_token: string) => {
   if (refresh_token) {
     const getParams = async () => {
       const client_id = process.env.SPOTIFY_CLIENT_ID;
-      console.log(process.env.SPOTIFY_CLIENT_ID);
       if (!client_id) {
         throw new Error("No client id");
       }
@@ -27,7 +26,9 @@ const getRefreshedToken = async (refresh_token: string) => {
         method: "POST",
         headers: requestHeaders,
       });
-      return await resp.json();
+      const json = await resp.json();
+      console.log(json);
+      return json;
     } catch (e) {
       console.error(e);
       return e;
@@ -37,6 +38,7 @@ const getRefreshedToken = async (refresh_token: string) => {
 
 export default async (req: NowRequest, res: NowResponse) => {
   const body = JSON.parse(req.body);
+  console.log(body);
   const refreshed = await getRefreshedToken(body.refresh_token);
   if (refreshed?.access_token) {
     res.send(refreshed);

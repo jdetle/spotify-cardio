@@ -36,8 +36,8 @@ export default styled.a<{
   ${(props) =>
     props.active &&
     css`
-      color: #35e0ff;
-      border: 0.2rem solid #35e0ff;
+      color: props.theme.colors.green3;
+      border: 0.2rem solid props.theme.colors.green3;
     `}
   ${(props) =>
     props.primary &&

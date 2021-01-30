@@ -22,6 +22,7 @@ const Layout = styled.div`
     grid-area: 1 / 1 / 2 / 2;
   }
   nav {
+    margin-left: 1rem;
     grid-area: 2 / 1 / 3 / 2;
     font-size: 2rem;
     font-weight: 500;
