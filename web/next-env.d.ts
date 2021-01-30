@@ -1,5 +1,57 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
+type SearchResponseType = {
+  tracks: {
+    href: string;
+    items: Array<TrackType>;
+    limit: number;
+    next: string;
+    offset: number;
+    previous: string;
+    total: number;
+  };
+};
+type AlbumType = {
+  album_type: string;
+  artists: Array<unknown>;
+  available_markets: Array<string>;
+  external_urls: { spotify: string };
+  href: string;
+  id: string;
+  images: Array<{ height: number; url: string; width: number }>;
+  name: string;
+  // YYYY-MM-DD
+  release_date: string;
+  release_date_precision: string;
+};
+type ArtistType = unknown;
+type ItemType = "album" | "artist" | "playlist" | "track" | "show" | "episode";
+type TrackType = {
+  album: AlbumType;
+  artists: ArtistType;
+  name: string;
+  disc_number: number;
+  duration_ms: number;
+  explicit: false;
+  external_ids: {
+    isrc: string;
+  };
+  external_urls: {
+    spotify: string;
+  };
+  href: string;
+  id: string;
+  is_local: Boolean;
+  is_playable: Boolean;
+  name: string;
+  popularity: number;
+  preview_url: string;
+  track_number: 5;
+  type: "track";
+  uri: string;
+};
+
+type PlaylistType = Array<TrackType>;
 
 type PlayerConfig = {
   name: string;

@@ -26,7 +26,7 @@ export default async (req: NowRequest, res: NowResponse) => {
     headers.append("Authorization", `Bearer ${token.access_token}`);
   }
   const q = query;
-  const type = "artist";
+  const type = "track";
   const qp = new URLSearchParams([
     ["q", q],
     ["type", type],
@@ -38,6 +38,7 @@ export default async (req: NowRequest, res: NowResponse) => {
     );
     try {
       const results = await spotifyResponse.json();
+      console.log(results);
       res.send(results);
     } catch (e) {
       res.send(e);
