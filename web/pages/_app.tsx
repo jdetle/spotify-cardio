@@ -123,7 +123,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <ThemeProvider theme={FIGMA_PALETTE}>
+      <ThemeProvider theme={{ colors: FIGMA_PALETTE }}>
         <AppWrapper>
           <AuthProvider>
             <WebPlayback>

@@ -39,7 +39,7 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
           <link rel="icon" type="image/x-icon" href="./static/favicon.ico" />
           <meta
             name="Description"
-            content="A summary of the top 20 words in the internet of things."
+            content="An app to help create spotify playlists"
           />
         </Head>
         <body>

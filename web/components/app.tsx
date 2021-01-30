@@ -5,9 +5,9 @@ import styled, { createGlobalStyle } from "styled-components";
 const StyledApp = styled.div`
   height: 100%;
   color: ${(props) => {
-    return props.theme.green1;
+    return props.theme.colors.green1;
   }};
-  background: ${(props) => props.theme.gray6};
+  background: ${(props) => props.theme.colors.gray6};
   background: linear-gradient(
     176deg,
     rgba(215, 215, 215, 1) 0%,

@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import Button from "./../components/button";
+import Button from "../components/a";
 import Container from "./../components/container";
 import { AuthContext } from "./_app";
 
 import { v4 } from "uuid";
+import { useRouter } from "next/router";
 
 async function sha256(plain) {
   const encoder = new TextEncoder();
   const data = encoder.encode(plain);
-
   return window.crypto.subtle.digest("SHA-256", data);
 }
 
@@ -23,7 +23,8 @@ function base64urlencode(a) {
 const Landing = () => {
   const Title = "Spotify Cardio";
   const [loginLink, setLoginLink] = useState<string>("");
-  const { setAuthState, setVerifier } = useContext(AuthContext);
+  const { token, setAuthState, setVerifier } = useContext(AuthContext);
+  const { push } = useRouter();
   useEffect(() => {
     const getLink = async () => {
       try {
@@ -48,11 +49,13 @@ const Landing = () => {
 
     getLink();
   }, []);
-
+  useEffect(() => {
+    if (token && token.access_token) push("/playlist-creator");
+  }, [token]);
   return (
     <div>
       <Container direction={"column"} center>
-        <div aria-hidden={true} id="index_title" role="banner">
+        <div color="green1" aria-hidden={true} id="index_title" role="banner">
           {Title}
         </div>
       </Container>

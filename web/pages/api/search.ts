@@ -13,7 +13,7 @@ const SPOTIFY_URL = `https://api.spotify.com/v1`;
 
 export default async (req: NowRequest, res: NowResponse) => {
   const { token, query } = await JSON.parse(req.body);
-
+  console.log(token, query);
   let headers = new Headers();
   console.log(token);
   if (token && token.access_token) {
@@ -32,6 +32,7 @@ export default async (req: NowRequest, res: NowResponse) => {
     );
     try {
       const results = (await spotifyResponse.json()) as TracksSearchResponseType;
+      console.log(results);
       res.send(results);
     } catch (e) {
       res.send(e);

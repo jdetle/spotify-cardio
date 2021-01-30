@@ -8,6 +8,20 @@ import {
 } from "react";
 import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
 import { PlayerContext } from "../contexts/web-playback";
+import Components from "./../components";
+
+const {
+  Button,
+  Label,
+  Form,
+  TrackSearchList,
+  TrackListItem,
+  Typography,
+  Header,
+  Footer,
+  Layout,
+  Input,
+} = Components;
 
 const BASE_URL = "https://api.spotify.com/v1";
 
@@ -15,12 +29,18 @@ type FetchType<DataType> = (
   token: TokenTypes | null
 ) => Promise<{ data: DataType | null; error: Error | null }>;
 
-const SearchResult: React.FC = ({ children }) => {
-  return <div>{children}</div>;
+const SearchResult: React.FC<TrackType> = ({ children }) => {
+  return <TrackListItem>{children}</TrackListItem>;
 };
 
-const SearchTypeResultBox: React.FC = ({ children }) => {
-  return <ul>{children}</ul>;
+const SearchTypeResultBox: React.FC<ITableState<TracksSearchResponseType>> = ({
+  children,
+  loading,
+  data,
+  error,
+}) => {
+  console.log(loading, data, error);
+  return <TrackSearchList>{children}</TrackSearchList>;
 };
 
 type ActionType<DataType> =
@@ -89,13 +109,10 @@ export function useTableState<DataType>(
 
   return useMemo(() => tableState, [tableState]);
 }
+
 const SearchUI: React.FC = ({}) => {
   const { token } = useContext(AuthContext);
   const [query, setQuery] = useState<string>("");
-  const [
-    searchResults,
-    // setSearchResults,
-  ] = useState<TracksSearchResponseType | null>(null);
 
   const search = useCallback(async (token: SpotifyTokenType | null) => {
     if (token == null) return new Error("No token");
@@ -106,7 +123,8 @@ const SearchUI: React.FC = ({}) => {
       });
       try {
         const results = await response.json();
-        return results as TracksSearchResponseType;
+        console.log(results);
+        return { data: results as TracksSearchResponseType };
       } catch (error) {
         return error;
       }
@@ -120,19 +138,17 @@ const SearchUI: React.FC = ({}) => {
     token
   );
 
-  console.log(loading, data, error);
-
   return (
     <>
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
         }}
         id="search"
         role="search"
       >
-        <label htmlFor="search-input">Search this site</label>
-        <input
+        <Label htmlFor="search-input">Search this site</Label>
+        <Input
           type="search"
           id="search-input"
           role="search-input"
@@ -143,11 +159,15 @@ const SearchUI: React.FC = ({}) => {
             setQuery(e.target.value);
           }}
         />
-        <input value="Submit" type="submit" />
-      </form>
-      <SearchTypeResultBox>
-        {searchResults?.tracks.items.map((item, i) => {
-          return <SearchResult key={i}>{item.name}</SearchResult>;
+        <Input value="Submit" type="submit" />
+      </Form>
+      <SearchTypeResultBox data={data} loading={loading} error={error}>
+        {data?.tracks.items.map((item, i) => {
+          return (
+            <SearchResult {...item} key={i}>
+              {item.name}
+            </SearchResult>
+          );
         })}
       </SearchTypeResultBox>
     </>
@@ -187,6 +207,7 @@ const getRefreshedToken = async (token: TokenTypes) => {
     }
   }
 };
+
 export const PlaylistCreator = () => {
   const { token, setToken } = useContext(AuthContext);
   const { player } = useContext(PlayerContext);
@@ -209,7 +230,7 @@ export const PlaylistCreator = () => {
         });
       });
     };
-    console.log(play);
+    console.log(play, player);
   }, []);
   const authToken = token as SpotifyTokenType;
   useEffect(() => {
@@ -218,12 +239,10 @@ export const PlaylistCreator = () => {
         try {
           const headers = new Headers();
           headers.set("Authorization", `Bearer ${authToken.access_token}`);
-          console.log(`baseurl: ${BASE_URL}/me`);
           const resp = await fetch(`${BASE_URL}/me`, {
             headers,
           });
           const user = await resp.json();
-          console.log("user", user);
           if (user.error && user.error.status == 401) {
             const refreshedToken = await getRefreshedToken(authToken);
             setToken(refreshedToken);

@@ -28,7 +28,7 @@ const Callback = () => {
           console.log(authorizationResp);
           if (authorizationResp.status === 200) {
             setToken(await authorizationResp.json());
-            push("/authenticated");
+            push("/playlist-creator");
           }
         } catch (e) {
           // console.log(e);
