@@ -1,6 +1,5 @@
 {
     "version": 2,
-    "name": "Spotify Cardio",
     "alias": "spotifycardio.com",
     "builds": [
       { "src": "/public/*", "use": "@now/public" },
