@@ -41,7 +41,7 @@ const getToken = async (req: NowRequest) => {
 
 export default (request: NowRequest, res: NowResponse) => {
   if (request.query.code == null || request.query.code_verifier == null) {
-    res.end("Bad params");
+    res.send(new Error("Bad params"));
   }
   getToken(request)
     .then((data) => {
@@ -49,6 +49,6 @@ export default (request: NowRequest, res: NowResponse) => {
     })
     .catch((e) => {
       console.error(e);
-      res.send("Error");
+      res.send(e);
     });
 };

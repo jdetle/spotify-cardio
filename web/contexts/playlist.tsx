@@ -1,11 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useMemo, useState } from "react";
+import { uniqBy } from "lodash";
 
 export type PlaylistContextType = {
   playlist: PlaylistType | null;
@@ -21,20 +15,20 @@ export const PlaylistContext = createContext<PlaylistContextType>({
   insertTrack: null,
 });
 
-export const PlaylistEnabler: React.FC = ({ children }) => {
+export const PlaylistProvider: React.FC = ({ children }) => {
   const [playlist, setPlaylist] = useState<PlaylistType>([] as TrackType[]);
 
-  const addTrack = useCallback((track: TrackType) => {
-    setPlaylist(playlist.concat([track]));
-  }, []);
+  const addTrack = (track: TrackType) => {
+    setPlaylist(uniqBy(playlist.concat([track]), (item) => item.uri));
+  };
 
-  const removeTrack = useCallback((id: string) => {
+  const removeTrack = (id: string) => {
     setPlaylist(playlist.filter((i) => i.id != id));
-  }, []);
+  };
 
-  const insertTrack = useCallback((rightIndex: number, track: TrackType) => {
+  const insertTrack = (rightIndex: number, track: TrackType) => {
     setPlaylist(playlist.splice(rightIndex, 0, track));
-  }, []);
+  };
 
   const memoVal = useMemo(() => {
     return {
@@ -43,7 +37,7 @@ export const PlaylistEnabler: React.FC = ({ children }) => {
       removeTrack: removeTrack,
       insertTrack: insertTrack,
     };
-  }, []);
+  }, [playlist, addTrack, removeTrack, insertTrack]);
 
   return (
     <PlaylistContext.Provider value={memoVal}>

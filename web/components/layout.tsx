@@ -14,10 +14,6 @@ const Layout = styled.div`
   height: 100%;
   width: 100%;
 
-  .div2 {
-  }
-  .div3 {
-  }
   header {
     grid-area: 1 / 1 / 2 / 2;
   }

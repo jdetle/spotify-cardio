@@ -21,7 +21,7 @@ export const Playlist: React.FC = ({}) => {
     return (
       <StyledUL>
         {playlist?.map((track, index) => {
-          return <PlaylistItem {...track} index={index} />;
+          return <PlaylistItem {...track} key={index} />;
         })}
       </StyledUL>
     );

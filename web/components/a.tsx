@@ -24,20 +24,20 @@ export default styled.a<{
 
   z-index: 1;
   @media (max-width: 420px) {
-    font-size: 1rem;
+    font-size: 1m;
     height: 4rem;
   }
 
   :hover {
     cursor: pointer;
-    color: #35e0ff;
-    border: 0.2rem solid #35e0ff;
+    color: ${(p) => p.theme.colors.green3};
+    border: 0.2rem solid ${(p) => p.theme.colors.green3};
   }
   ${(props) =>
     props.active &&
     css`
       color: props.theme.colors.green3;
-      border: 0.2rem solid props.theme.colors.green3;
+      border: 0.2rem solid ${props.theme.colors.green3};
     `}
   ${(props) =>
     props.primary &&

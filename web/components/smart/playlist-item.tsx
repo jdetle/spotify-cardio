@@ -1,19 +1,34 @@
-import styled from "styled-components";
+import { useContext } from "react";
+import { FaPlus } from "react-icons/fa";
 
-const StyledLi = styled.li<{}>`
-  background-color: ${(p) => p.theme.colors.gray6};
-  margin: 0.2rem;
-  height: 3rem;
-`;
+import {
+  TrackActionsContainer,
+  TrackContainer,
+  TrackDetailsContainer,
+  AddSongButton,
+} from "../track";
+import StyledLI from "./../li";
+import { PlaylistContext } from "contexts/playlist";
 
-const PlaylistItem = ({ name }: TrackType & { index: number }) => {
+const PlaylistItem: React.FC<TrackType> = (props) => {
+  const { addTrack } = useContext(PlaylistContext);
   return (
-    <StyledLi>
-      <div>
-        {name}
-        <div></div>
-      </div>
-    </StyledLi>
+    <StyledLI>
+      <TrackContainer>
+        <TrackDetailsContainer>{props.name}</TrackDetailsContainer>
+        <TrackActionsContainer>
+          {addTrack && (
+            <AddSongButton
+              onClick={() => {
+                addTrack(props);
+              }}
+            >
+              <FaPlus></FaPlus>
+            </AddSongButton>
+          )}
+        </TrackActionsContainer>
+      </TrackContainer>
+    </StyledLI>
   );
 };
 

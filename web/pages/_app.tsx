@@ -7,6 +7,7 @@ import { ThemeProvider } from "styled-components";
 import { App as AppWrapper } from "../components/app";
 import WebPlayback from "../contexts/web-playback";
 import Layout from "../components/layout";
+import { PlaylistProvider } from "contexts/playlist";
 
 export type SpotifyTokenType = {
   access_token: string;
@@ -126,18 +127,20 @@ class MyApp extends App {
       <ThemeProvider theme={{ colors: FIGMA_PALETTE }}>
         <AppWrapper>
           <AuthProvider>
-            <WebPlayback>
-              <WindowSize>
-                {(size) => (
-                  <Layout>
-                    <Component
-                      {...pageProps}
-                      size={size.width > 0 ? { ...size } : null}
-                    />
-                  </Layout>
-                )}
-              </WindowSize>
-            </WebPlayback>
+            <PlaylistProvider>
+              <WebPlayback>
+                <WindowSize>
+                  {(size) => (
+                    <Layout>
+                      <Component
+                        {...pageProps}
+                        size={size.width > 0 ? { ...size } : null}
+                      />
+                    </Layout>
+                  )}
+                </WindowSize>
+              </WebPlayback>
+            </PlaylistProvider>
           </AuthProvider>
         </AppWrapper>
       </ThemeProvider>

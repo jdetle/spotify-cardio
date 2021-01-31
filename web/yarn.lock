@@ -1270,18 +1270,6 @@
   resolved "https://registry.yarnpkg.com/@next/react-refresh-utils/-/react-refresh-utils-9.5.2.tgz"
   integrity sha512-ch/16u3OVy/aIXJROwqXZjGw/tFMyG7qy2IGDA2RFjvQMtPyJJrklmwX2EcfH4+4spRI2MZKes2soI+0w2/MDQ==
 
-"@rebass/forms@^4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@rebass/forms/-/forms-4.0.6.tgz#19a3af64f855baa65dec65aecadda5cd95a09dd7"
-  integrity sha512-20dHAlb5V0Na2HxCr73Jjoc4hD1ElimmlBpQtclXMoXUsjJ7ORdCNL1S9R54MX5f7iU2VrLGHU42eL7+nONNPQ==
-  dependencies:
-    reflexbox "^4.0.6"
-
-"@rebass/preset@^4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@rebass/preset/-/preset-4.0.5.tgz#f4fb9bec85efa1eb658b92fc64fbb4250d0af2fb"
-  integrity sha512-RsNZ6r6GjJj7dvis7J+fniekpzqGh+tQ+slIbSX0vUjoB9XTJrRHPnNAf2fcWJHxVfCbZWY1JNsuq3Fcdj1oJA==
-
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.1.tgz"
@@ -1637,6 +1625,11 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.5.tgz"
   integrity sha512-7+2BITlgjgDhH0vvwZU/HZJVyk+2XUlvxXe8dFMedNX/aMkaOq++rMAFXc0tM7ij15QaWlbdQASBR9dihi+bDQ==
 
+"@types/lodash@^4.14.168":
+  version "4.14.168"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
+  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
+
 "@types/next-server@*":
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/@types/next-server/-/next-server-9.0.0.tgz"
@@ -1684,6 +1677,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-icons@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-icons/-/react-icons-3.0.0.tgz#27ca2823a6add881d06a371bfff093afc1b9c829"
+  integrity sha512-Vefs6LkLqF61vfV7AiAqls+vpR94q67gunhMueDznG+msAkrYgRxl7gYjNem/kZ+as2l2mNChmF1jRZzzQQtMg==
+  dependencies:
+    react-icons "*"
+
 "@types/react-native@*":
   version "0.63.8"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.63.8.tgz"
@@ -1699,16 +1699,6 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/rebass@^4.0.7":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@types/rebass/-/rebass-4.0.7.tgz#c1841f0173c434185a958be3d7171e77363af1b4"
-  integrity sha512-f7MI3OOdV2gNAJm+tub/esdmgLHyGXVD/uZ1J/hSdvB6iTTm/k2xJQ3x73KqekeD5XoOfJeI9oR8/IXb3QqNKA==
-  dependencies:
-    "@types/react" "*"
-    "@types/styled-components" "*"
-    "@types/styled-system" "*"
-    "@types/styled-system__css" "*"
-
 "@types/sinonjs__fake-timers@^6.0.1":
   version "6.0.2"
   resolved "https://registry.npmjs.org/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.2.tgz"
@@ -1719,15 +1709,6 @@
   resolved "https://registry.npmjs.org/@types/sizzle/-/sizzle-2.3.2.tgz"
   integrity sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==
 
-"@types/styled-components@*":
-  version "5.1.7"
-  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.7.tgz#3cd10b088c1cb1acde2e4b166b3e8275a3083710"
-  integrity sha512-BJzPhFygYspyefAGFZTZ/8lCEY4Tk+Iqktvnko3xmJf9LrLqs3+grxPeU3O0zLl6yjbYBopD0/VikbHgXDbJtA==
-  dependencies:
-    "@types/hoist-non-react-statics" "*"
-    "@types/react" "*"
-    csstype "^3.0.2"
-
 "@types/styled-components@^5.1.2":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.2.tgz"
@@ -1736,20 +1717,6 @@
     "@types/hoist-non-react-statics" "*"
     "@types/react" "*"
     "@types/react-native" "*"
-    csstype "^3.0.2"
-
-"@types/styled-system@*":
-  version "5.1.10"
-  resolved "https://registry.yarnpkg.com/@types/styled-system/-/styled-system-5.1.10.tgz#dcf5690dd837ca49b8de1f23cb99d510c7f4ecb3"
-  integrity sha512-OmVjC9OzyUckAgdavJBc+t5oCJrNXTlzWl9vo2x47leqpX1REq2qJC49SEtzbu1OnWSzcD68Uq3Aj8TeX+Kvtg==
-  dependencies:
-    csstype "^3.0.2"
-
-"@types/styled-system__css@*":
-  version "5.0.14"
-  resolved "https://registry.yarnpkg.com/@types/styled-system__css/-/styled-system__css-5.0.14.tgz#97559d823216d475f716fb5b8dd1766f2d3eeafa"
-  integrity sha512-dvhSQ5upz6TqiQmWLNF0sqdoL5nTomza58vtTSklpE9lDS+5w/ew8PQ+HPSRaXMGrmPGUiL7F0vwryVdxHWfpA==
-  dependencies:
     csstype "^3.0.2"
 
 "@types/uuid@^8.3.0":
@@ -6386,6 +6353,11 @@ lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
+lodash@^4.17.20:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+
 log-symbols@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-1.0.2.tgz"
@@ -7952,6 +7924,11 @@ react-fns@^1.4.0:
   dependencies:
     qs "^6.5.1"
     react-media "^1.6.1"
+
+react-icons@*, react-icons@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.1.0.tgz#9ca9bcbf2e3aee8e86e378bb9d465842947bbfc3"
+  integrity sha512-FCXBg1JbbR0vWALXIxmFAfozHdVIJmmwCD81Jk0EKOt7Ax4AdBNcaRkWhR0NaKy9ugJgoY3fFvo0PHpte55pXg==
 
 react-is@16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"

@@ -190,28 +190,8 @@ const SearchUI: React.FC = ({}) => {
 
 export const PlaylistCreator = () => {
   const { token, setToken } = useContext(AuthContext);
-  const { player } = useContext(PlayerContext);
   const { push } = useRouter();
-  useEffect(() => {
-    const play = ({
-      spotify_uri,
-      playerInstance: {
-        _options: { getOAuthToken, id },
-      },
-    }) => {
-      getOAuthToken((access_token: string) => {
-        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
-          method: "PUT",
-          body: JSON.stringify({ uris: [spotify_uri] }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
-      });
-    };
-    console.log(play, player);
-  }, []);
+
   const authToken = token as SpotifyTokenType;
   useEffect(() => {
     const getUser = async () => {
@@ -229,7 +209,6 @@ export const PlaylistCreator = () => {
               body: JSON.stringify({ refresh_token: authToken.refresh_token }),
             });
             const refreshedToken = await response.json();
-            console.log(refreshedToken);
             setToken(refreshedToken);
           }
         } catch (e) {

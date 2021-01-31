@@ -34,7 +34,7 @@ const a = styled.a<{ small?: boolean }>`
   :hover,
   :active,
   :focus {
-    color: red;
+    color: ${(p) => p.theme.colors.green3};
     cursor: pointer;
     text-decoration: none;
   }

@@ -1,29 +1,47 @@
-import styled from "styled-components";
+import { useContext } from "react";
+import { FaPlus, FaPlay } from "react-icons/fa";
 
-const StyledLi = styled.li<{}>`
-  background-color: ${(p) => p.theme.colors.gray6};
-  margin: 0.4rem;
-  height: 3rem;
-  border-radius: 0.2rem;
-`;
+import { PlaylistContext } from "contexts/playlist";
+import {
+  TrackActionsContainer,
+  TrackContainer,
+  TrackDetailsContainer,
+  AddSongButton,
+} from "./../track";
+import StyledLI from "./../li";
+import { PlayerContext } from "contexts/web-playback";
+import { play } from "./playback-api-calls";
 
-const TrackContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 0.1rem 0.3rem 0.1rem 0.3rem;
-`;
+const TrackListItem: React.FC<TrackType> = (props) => {
+  const { addTrack } = useContext(PlaylistContext);
+  const { player } = useContext(PlayerContext);
 
-const TrackListItem = ({ name }: TrackType) => {
   return (
-    <StyledLi>
+    <StyledLI>
       <TrackContainer>
-        {name}
-        <div></div>
+        <TrackDetailsContainer>{props.name}</TrackDetailsContainer>
+        <TrackActionsContainer>
+          {addTrack && (
+            <AddSongButton
+              onClick={() => {
+                addTrack(props);
+              }}
+            >
+              <FaPlus></FaPlus>
+            </AddSongButton>
+          )}
+          {player && (
+            <AddSongButton
+              onClick={() => {
+                play({ spotify_uri: props.uri, playerInstance: player });
+              }}
+            >
+              <FaPlay></FaPlay>
+            </AddSongButton>
+          )}
+        </TrackActionsContainer>
       </TrackContainer>
-    </StyledLi>
+    </StyledLI>
   );
 };
 

@@ -65,6 +65,6 @@ export default (request: NowRequest, res: NowResponse) => {
     })
     .catch((e) => {
       console.error(e);
-      res.send("Error");
+      res.send(e);
     });
 };
