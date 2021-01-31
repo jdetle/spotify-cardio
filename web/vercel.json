@@ -2,10 +2,10 @@
     "version": 2,
     "alias": "spotifycardio.com",
     "builds": [
-      { "src": "/public/*", "use": "@now/public" },
+      { "src": "/public/*", "use": "@vercel/public" },
       {
         "src": "next.config.js",
-        "use": "@now/next"
+        "use": "@vercel/next"
       }
     ],
     "routes": [
