@@ -10,7 +10,6 @@ import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
 import Components from "./../components";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { PlayerContext } from "contexts/web-playback";
 
 const {
   Label,
@@ -191,8 +190,7 @@ const SearchUI: React.FC = ({}) => {
 export const PlaylistCreator = () => {
   const { token, setToken } = useContext(AuthContext);
 
-  const { reload, push } = useRouter();
-  const { player } = useContext(PlayerContext);
+  const { push } = useRouter();
   const authToken = token as SpotifyTokenType;
   useEffect(() => {
     const getUser = async () => {

@@ -5,7 +5,6 @@ import Container from "./../components/container";
 import { AuthContext } from "./_app";
 
 import { v4 } from "uuid";
-import { useRouter } from "next/router";
 
 async function sha256(plain) {
   const encoder = new TextEncoder();
