@@ -2,16 +2,16 @@ import { NowRequest, NowResponse } from "@vercel/node";
 
 const getToken = async (req: NowRequest) => {
   const code = req.query.code as string;
+  const redirect_base = req.query.redirect_base as string;
   const code_verifier = req.query.code_verifier as string;
 
   const getParams = async () => {
     const client_id = process.env.SPOTIFY_CLIENT_ID;
-    const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
-      ? process.env.SPOTIFY_REDIRECT_URI
-      : "http://localhost:3000/callback";
     if (!client_id) {
       throw new Error("No client id");
     }
+    const redirect_uri = `${redirect_base}callback`;
+    console.log("redirect:", redirect_uri);
     return new URLSearchParams(
       Object.entries({
         client_id,

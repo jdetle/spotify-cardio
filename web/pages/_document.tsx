@@ -1,4 +1,4 @@
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
 import { ServerStyleSheet } from "styled-components";
 
@@ -30,7 +30,7 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
   }
   public render() {
     return (
-      <html lang="en" role="main">
+      <Html lang="en">
         <Head>
           {this.props.styleTags}
           <script src="https://sdk.scdn.co/spotify-player.js"></script>
@@ -46,7 +46,7 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

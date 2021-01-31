@@ -24,7 +24,6 @@ const Landing = () => {
   const Title = "Spotify Cardio";
   const [loginLink, setLoginLink] = useState<string>("");
   const { token, setAuthState, setVerifier } = useContext(AuthContext);
-  const { push } = useRouter();
   useEffect(() => {
     const getLink = async () => {
       try {
@@ -36,9 +35,11 @@ const Landing = () => {
           .split("-")
           .pop() as string;
         const spotifyResp = await fetch(
-          `/api/spotify-login?state=${authState}&code_challenge=${codeChallenge}`
+          `/api/spotify-login?state=${authState}&code_challenge=${codeChallenge}&redirect_base=${window.location.href}`
         );
+
         const link = await spotifyResp.text();
+        console.log(link);
         localStorage?.setItem("spotify-verifier", code);
         localStorage?.setItem("spotify-auth-state", authState);
         setVerifier(code);
@@ -50,7 +51,9 @@ const Landing = () => {
     getLink();
   }, []);
   useEffect(() => {
+    /*
     if (token && token.access_token) push("/playlist-creator");
+    */
   }, [token]);
   return (
     <div>
@@ -60,9 +63,13 @@ const Landing = () => {
         </div>
       </Container>
       <Container direction={"column"} center>
-        <Button href={loginLink}>
-          Authenticate with Spotify To Get Started
-        </Button>
+        {token && token.access_token ? (
+          <Button href="/playlist-creator">Go Make a Playlist</Button>
+        ) : (
+          <Button href={loginLink}>
+            Authenticate with Spotify To Get Started
+          </Button>
+        )}
       </Container>
     </div>
   );
