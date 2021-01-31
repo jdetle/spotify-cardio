@@ -29,7 +29,6 @@ const login = async (req: NowRequest) => {
   const getParams = async () => {
     const client_id = process.env.SPOTIFY_CLIENT_ID;
     const redirect_uri = `${redirect_base}callback`;
-    console.log("redirect:", redirect_uri);
     if (!client_id) {
       throw new Error("No client id");
     }
@@ -49,10 +48,9 @@ const login = async (req: NowRequest) => {
 
   const params = await getParams();
   const url = `https://accounts.spotify.com/authorize?${params}`;
-  console.log("auth url", url);
   try {
     const resp = await fetch(url, { method: "GET", redirect: "follow" });
-    return await resp.text();
+    return resp;
   } catch (e) {
     console.error(e);
     return e;
@@ -61,8 +59,8 @@ const login = async (req: NowRequest) => {
 
 export default async (request: NowRequest, res: NowResponse) => {
   try {
-    const responseJSON = await login(request);
-    res.send(responseJSON.url);
+    const loginData = await login(request);
+    res.send(loginData.url);
   } catch (e) {
     console.error(e);
     res.send(e);

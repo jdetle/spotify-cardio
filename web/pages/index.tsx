@@ -24,6 +24,7 @@ const Landing = () => {
   const Title = "Spotify Cardio";
   const [loginLink, setLoginLink] = useState<string>("");
   const { token, setAuthState, setVerifier } = useContext(AuthContext);
+
   useEffect(() => {
     const getLink = async () => {
       try {
@@ -35,11 +36,12 @@ const Landing = () => {
           .split("-")
           .pop() as string;
         const spotifyResp = await fetch(
-          `/api/spotify-login?state=${authState}&code_challenge=${codeChallenge}&redirect_base=${window.location.href}`
+          `/api/spotify-login?state=${authState}&code_challenge=${codeChallenge}&redirect_base=${
+            window.location.href.split("?")[0]
+          }`
         );
 
         const link = await spotifyResp.text();
-        console.log(link);
         localStorage?.setItem("spotify-verifier", code);
         localStorage?.setItem("spotify-auth-state", authState);
         setVerifier(code);

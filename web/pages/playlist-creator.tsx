@@ -221,12 +221,7 @@ export const PlaylistCreator = () => {
     };
     getUser();
   }, [token]);
-  useEffect(() => {
-    console.log(player, token);
-    if (player == null && token != null && token.access_token) {
-      reload();
-    }
-  }, [player, token]);
+
   return (
     <SearchAndAddToPlaylistSection>
       <SearchUI />

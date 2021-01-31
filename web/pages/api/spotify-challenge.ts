@@ -10,8 +10,7 @@ const getToken = async (req: NowRequest) => {
     if (!client_id) {
       throw new Error("No client id");
     }
-    const redirect_uri = `${redirect_base}callback`;
-    console.log("redirect:", redirect_uri);
+    const redirect_uri = `${redirect_base}`;
     return new URLSearchParams(
       Object.entries({
         client_id,
@@ -45,7 +44,7 @@ export default (request: NowRequest, res: NowResponse) => {
   }
   getToken(request)
     .then((data) => {
-      res.send(JSON.stringify(data));
+      res.send(data);
     })
     .catch((e) => {
       console.error(e);

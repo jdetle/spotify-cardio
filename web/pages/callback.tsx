@@ -23,7 +23,7 @@ const Callback = () => {
           const qp = new URLSearchParams([
             ["code", query.code as string],
             ["code_verifier", verifier],
-            ["redirect_base", window.location.href],
+            ["redirect_base", window.location.href.split("?")[0]],
           ]);
           const authorizationResp = await fetch(
             `/api/spotify-challenge?${qp.toString()}`
