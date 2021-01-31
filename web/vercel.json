@@ -2,13 +2,13 @@
     "version": 2,
     "alias": "spotifycardio.com",
     "builds": [
-      { "src": "/public/*", "use": "@now/public" },
       {
         "src": "next.config.js",
         "use": "@now/next"
       }
     ],
     "routes": [
+      { "src": "/(.*)", "dest": "dist/$1" }
     ],
     "env": {
       "SPOTIFY_CLIENT_ID": "@spotify_client_id",
