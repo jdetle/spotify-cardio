@@ -44,5 +44,4 @@ package-lock.json
 generated/
 *.env
 secrets.env
-
 .vercel
