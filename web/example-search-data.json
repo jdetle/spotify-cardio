@@ -1,0 +1,118 @@
+{
+    "tracks": {
+      "href": "https://api.spotify.com/v1/search?query=Muse&type=track&market=US&offset=5&limit=1",
+      "items": [
+        {
+          "album": {
+            "album_type": "album",
+            "artists": [
+              {
+                "external_urls": {
+                  "spotify": "https://open.spotify.com/artist/5aIqB5nVVvmFsvSdExz408"
+                },
+                "href": "https://api.spotify.com/v1/artists/5aIqB5nVVvmFsvSdExz408",
+                "id": "5aIqB5nVVvmFsvSdExz408",
+                "name": "Johann Sebastian Bach",
+                "type": "artist",
+                "uri": "spotify:artist:5aIqB5nVVvmFsvSdExz408"
+              },
+              {
+                "external_urls": {
+                  "spotify": "https://open.spotify.com/artist/2QOIawHpSlOwXDvSqQ9YJR"
+                },
+                "href": "https://api.spotify.com/v1/artists/2QOIawHpSlOwXDvSqQ9YJR",
+                "id": "2QOIawHpSlOwXDvSqQ9YJR",
+                "name": "Antonio Vivaldi",
+                "type": "artist",
+                "uri": "spotify:artist:2QOIawHpSlOwXDvSqQ9YJR"
+              },
+              {
+                "external_urls": {
+                  "spotify": "https://open.spotify.com/artist/1QL7yTHrdahRMpvNtn6rI2"
+                },
+                "href": "https://api.spotify.com/v1/artists/1QL7yTHrdahRMpvNtn6rI2",
+                "id": "1QL7yTHrdahRMpvNtn6rI2",
+                "name": "George Frideric Handel",
+                "type": "artist",
+                "uri": "spotify:artist:1QL7yTHrdahRMpvNtn6rI2"
+              }
+            ],
+            "external_urls": {
+              "spotify": "https://open.spotify.com/album/5yfoGD9YHyh0oaVwqceIwv"
+            },
+            "href": "https://api.spotify.com/v1/albums/5yfoGD9YHyh0oaVwqceIwv",
+            "id": "5yfoGD9YHyh0oaVwqceIwv",
+            "images": [
+              {
+                "height": 640,
+                "url": "https://i.scdn.co/image/ab67616d0000b2731a153447de8a02fb07b66f70",
+                "width": 640
+              },
+              {
+                "height": 300,
+                "url": "https://i.scdn.co/image/ab67616d00001e021a153447de8a02fb07b66f70",
+                "width": 300
+              },
+              {
+                "height": 64,
+                "url": "https://i.scdn.co/image/ab67616d000048511a153447de8a02fb07b66f70",
+                "width": 64
+              }
+            ],
+            "name": "Baroque Chill & Relax",
+            "release_date": "2021-01-21",
+            "release_date_precision": "day",
+            "total_tracks": 75,
+            "type": "album",
+            "uri": "spotify:album:5yfoGD9YHyh0oaVwqceIwv"
+          },
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/4JSWO1Pf2zV991fq64uAce"
+              },
+              "href": "https://api.spotify.com/v1/artists/4JSWO1Pf2zV991fq64uAce",
+              "id": "4JSWO1Pf2zV991fq64uAce",
+              "name": "Jean-Philippe Rameau",
+              "type": "artist",
+              "uri": "spotify:artist:4JSWO1Pf2zV991fq64uAce"
+            },
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/0iqgjl0OG3z53PZVIB7ZyD"
+              },
+              "href": "https://api.spotify.com/v1/artists/0iqgjl0OG3z53PZVIB7ZyD",
+              "id": "0iqgjl0OG3z53PZVIB7ZyD",
+              "name": "Víkingur Ólafsson",
+              "type": "artist",
+              "uri": "spotify:artist:0iqgjl0OG3z53PZVIB7ZyD"
+            }
+          ],
+          "disc_number": 1,
+          "duration_ms": 178787,
+          "explicit": false,
+          "external_ids": {
+            "isrc": "DEN961903280"
+          },
+          "external_urls": {
+            "spotify": "https://open.spotify.com/track/3JOYgXMrPVGe9nC2nqBeci"
+          },
+          "href": "https://api.spotify.com/v1/tracks/3JOYgXMrPVGe9nC2nqBeci",
+          "id": "3JOYgXMrPVGe9nC2nqBeci",
+          "is_local": false,
+          "is_playable": true,
+          "name": "L'entretien des Muses",
+          "popularity": 8,
+          "preview_url": null,
+          "track_number": 44,
+          "type": "track",
+          "uri": "spotify:track:3JOYgXMrPVGe9nC2nqBeci"
+        }
+      ],
+      "limit": 1,
+      "next": "https://api.spotify.com/v1/search?query=Muse&type=track&market=US&offset=6&limit=1",
+      "offset": 5,
+      "previous": "https://api.spotify.com/v1/search?query=Muse&type=track&market=US&offset=4&limit=1",
+      "total": 62239
+    }
+  }
