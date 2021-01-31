@@ -27,8 +27,8 @@ const login = async (req: NowRequest) => {
   const code_challenge = req.query.code_challenge as string;
   const getParams = async () => {
     const client_id = process.env.SPOTIFY_CLIENT_ID;
-    const redirect_uri = process.env.SPOTIFY_URI
-      ? process.env.SPOTIFY_URI
+    const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
+      ? process.env.SPOTIFY_REDIRECT_URI
       : "http://localhost:3000/callback";
     if (!client_id) {
       throw new Error("No client id");

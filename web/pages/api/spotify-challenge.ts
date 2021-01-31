@@ -6,8 +6,8 @@ const getToken = async (req: NowRequest) => {
 
   const getParams = async () => {
     const client_id = process.env.SPOTIFY_CLIENT_ID;
-    const redirect_uri = process.env.SPOTIFY_URI
-      ? process.env.SPOTIFY_URI
+    const redirect_uri = process.env.SPOTIFY_REDIRCECT_URI
+      ? process.env.SPOTIFY_REDIRECT_URI
       : "http://localhost:3000/callback";
     if (!client_id) {
       throw new Error("No client id");

@@ -1,5 +1,5 @@
 module.exports = {
     env: {
-      SPOTIFY_URI: "https://spotifycardio.com"
+      SPOTIFY_REDIRECT_URI: "https://spotifycardio.com/callback"
     },
   }
