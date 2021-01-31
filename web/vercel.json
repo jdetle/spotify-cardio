@@ -9,6 +9,7 @@
       }
     ],
     "routes": [
+      { "src": "/(.*)", "dest": "dist/$1" }
     ],
     "env": {
       "SPOTIFY_CLIENT_ID": "@spotify_client_id",
