@@ -40,9 +40,7 @@ const PlaybackEnabler: React.FC = ({ children }) => {
         const player = new (Spotify as Spotify).Player({
           name: "Spotify Cardio",
           getOAuthToken: (cb) => {
-            console.log("player calling for oauth token");
-            const resp = cb(token?.access_token);
-            console.log(resp);
+            cb(token.access_token, token);
           },
         });
 

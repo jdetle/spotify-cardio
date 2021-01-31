@@ -11,8 +11,10 @@ import {
 import StyledLI from "./../li";
 import { PlayerContext } from "contexts/web-playback";
 import { play } from "./playback-api-calls";
+import { AuthContext } from "pages/_app";
 
 const TrackListItem: React.FC<TrackType> = (props) => {
+  const { setToken } = useContext(AuthContext);
   const { addTrack } = useContext(PlaylistContext);
   const { player } = useContext(PlayerContext);
 
@@ -33,7 +35,11 @@ const TrackListItem: React.FC<TrackType> = (props) => {
           {player && (
             <AddSongButton
               onClick={() => {
-                play({ spotify_uri: props.uri, playerInstance: player });
+                play({
+                  spotify_uri: props.uri,
+                  playerInstance: player,
+                  setToken,
+                });
               }}
             >
               <FaPlay></FaPlay>

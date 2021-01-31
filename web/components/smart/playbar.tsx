@@ -5,6 +5,7 @@ import RadioGroup, { StyledFieldSet } from "./../radio-group";
 import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
 import { play, pause } from "./playback-api-calls";
+import { AuthContext } from "pages/_app";
 
 const PlaybarBGContainer = styled.div`
   grid-area: 4 / 1 / 5 / 5;
@@ -32,6 +33,7 @@ const PlayDetails = styled.div`
 `;
 
 const Playbar: React.FC = ({}) => {
+  const { setToken } = useContext(AuthContext);
   const [value, setValue] = useState<string>("pause");
   const { playerState, player } = useContext(PlayerContext);
 
@@ -58,10 +60,11 @@ const Playbar: React.FC = ({}) => {
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
             onSelect={() => {
-              if (player) {
+              if (player && playerState) {
                 setValue("play");
                 play({
-                  spotify_uri: playerState?.track_window.current_track.uri,
+                  spotify_uri: playerState.track_window.current_track.uri,
+                  setToken,
                   playerInstance: player,
                 });
               }
@@ -74,7 +77,7 @@ const Playbar: React.FC = ({}) => {
             isActive={playerState != null && value === "pause"}
             onSelect={() => {
               if (player) {
-                pause({ playerInstance: player });
+                pause({ playerInstance: player, setToken });
                 setValue("pause");
               }
             }}

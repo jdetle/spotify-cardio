@@ -7,7 +7,6 @@ import React, {
   useState,
 } from "react";
 import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
-import { PlayerContext } from "../contexts/web-playback";
 import Components from "./../components";
 import { useRouter } from "next/router";
 import styled from "styled-components";

@@ -27,7 +27,6 @@ const getRefreshedToken = async (refresh_token: string) => {
         headers: requestHeaders,
       });
       const json = await resp.json();
-      console.log(json);
       return json;
     } catch (e) {
       console.error(e);
@@ -38,7 +37,6 @@ const getRefreshedToken = async (refresh_token: string) => {
 
 export default async (req: NowRequest, res: NowResponse) => {
   const body = JSON.parse(req.body);
-  console.log(body);
   const refreshed = await getRefreshedToken(body.refresh_token);
   if (refreshed?.access_token) {
     res.send(refreshed);
