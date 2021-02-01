@@ -1,5 +1,25 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
+type PlayerState = {
+  bitrate: number;
+  context: { uri: string | null; metadata: unknown };
+  disallows: { resuming: boolean; skipping_prev: boolean };
+  duration: number;
+  paused: boolean;
+  position: number;
+  repeat_mode: number;
+  restrictions: {
+    disallow_resuming_reasons: Array<unknown>;
+    disallow_skipping_prev_reasons: Array<unknown>;
+  };
+  shuffle: boolean;
+  timestamp: number;
+  track_window: {
+    current_track: TrackType;
+    next_tracks: Array<unknown>;
+    previous_tracks: Array<unknown>;
+  };
+};
 type TracksSearchResponseType = {
   tracks: {
     href: string;
@@ -63,7 +83,7 @@ type PlayerInstance = {
   disconnect: () => void;
   addListener: () => void;
   removeListener: () => void;
-  getCurrentState: () => void;
+  getCurrentState: () => Promise<PlayerStat>;
   setName: () => void;
   getVolume: () => void;
   setVolume: () => void;

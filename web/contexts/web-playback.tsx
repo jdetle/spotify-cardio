@@ -1,25 +1,6 @@
 import { AuthContext } from "pages/_app";
 import { createContext, useContext, useEffect, useState } from "react";
-type PlayerState = {
-  bitrate: number;
-  context: { uri: string | null; metadata: unknown };
-  disallows: { resuming: boolean; skipping_prev: boolean };
-  duration: number;
-  paused: boolean;
-  position: number;
-  repeat_mode: number;
-  restrictions: {
-    disallow_resuming_reasons: Array<unknown>;
-    disallow_skipping_prev_reasons: Array<unknown>;
-  };
-  shuffle: boolean;
-  timestamp: number;
-  track_window: {
-    current_track: TrackType;
-    next_tracks: Array<unknown>;
-    previous_tracks: Array<unknown>;
-  };
-};
+
 type PlayerContextType = {
   player: PlayerInstance | null;
   playerState: PlayerState | null;
@@ -81,6 +62,27 @@ const PlaybackEnabler: React.FC = ({ children }) => {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (playerInstance != null) {
+      playerInstance?.getCurrentState().then((state) => {
+        setPlayerState(state);
+      });
+    }
+    const timerId = setInterval(() => {
+      if (playerInstance != null) {
+        playerInstance
+          ?.getCurrentState()
+          .then((state) => {
+            setPlayerState(state);
+          })
+          .catch((e) => console.error(e));
+      }
+    }, 2000);
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [playerInstance, token]);
+  console.log(playerState);
   return (
     <PlayerContext.Provider value={{ player: playerInstance, playerState }}>
       {children}
