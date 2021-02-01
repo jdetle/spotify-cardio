@@ -40,14 +40,11 @@ const Layout = styled.div`
 `;
 
 const LayoutWithChildren = ({ children, title = "spotify cardio" }) => {
-  const { token } = useContext(AuthContext);
   return (
     <Layout>
       <Head>
         <title>{title}</title>
-        {token && token.access_token && (
-          <script src="https://sdk.scdn.co/spotify-player.js"></script>
-        )}
+        <script src="https://sdk.scdn.co/spotify-player.js"></script>
       </Head>
       <StyledHeader aria-label="Header containing links to Home" tabIndex={0}>
         <nav role="navigation">

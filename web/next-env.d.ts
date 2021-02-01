@@ -5,7 +5,7 @@ type PlayerState = {
   context: { uri: string | null; metadata: unknown };
   disallows: { resuming: boolean; skipping_prev: boolean };
   duration: number;
-  paused: boolean;
+  is_playing: boolean;
   position: number;
   repeat_mode: number;
   restrictions: {
@@ -101,5 +101,6 @@ interface Spotify {
 }
 
 interface Window extends Window {
-  onSpotifyWebPlaybackSDKReady: () => void;
+  onSpotifyWebPlaybackSDKReady: (() => void) | undefined;
+  player: PlayerInstance | null;
 }

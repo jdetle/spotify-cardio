@@ -127,8 +127,8 @@ class MyApp extends App {
       <ThemeProvider theme={{ colors: FIGMA_PALETTE }}>
         <AppWrapper>
           <AuthProvider>
-            <PlaylistProvider>
-              <WebPlayback>
+            <WebPlayback>
+              <PlaylistProvider>
                 <WindowSize>
                   {(size) => (
                     <Layout>
@@ -139,8 +139,8 @@ class MyApp extends App {
                     </Layout>
                   )}
                 </WindowSize>
-              </WebPlayback>
-            </PlaylistProvider>
+              </PlaylistProvider>
+            </WebPlayback>
           </AuthProvider>
         </AppWrapper>
       </ThemeProvider>

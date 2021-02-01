@@ -1,29 +1,36 @@
-import { AuthContext } from "pages/_app";
-import { useRef } from "react";
+import { getPlayerState, play } from "components/smart/playback-api-calls";
+import { AuthContext, SpotifyTokenType } from "pages/_app";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type PlayerContextType = {
-  player: PlayerInstance | null;
-  playerState: PlayerState | null;
+  playerInstance: PlayerInstance | null;
 };
 
 export const PlayerContext = createContext<PlayerContextType>({
-  player: null,
-  playerState: null,
+  playerInstance: null,
 });
 const PlaybackEnabler: React.FC = ({ children }) => {
-  const { token } = useContext(AuthContext);
-  const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const playerRef = useRef<PlayerInstance | null>(null);
+  const { token, setToken } = useContext(AuthContext);
+  const [playerInstance, setPlayerInstance] = useState<PlayerInstance | null>(
+    null
+  );
+
   useEffect(() => {
-    console.log(playerRef.current, token);
-    if (token && playerRef.current == null) {
+    if (playerInstance == null) {
       window.onSpotifyWebPlaybackSDKReady = () => {
         // @ts-ignore
         const player = new (Spotify as Spotify).Player({
           name: "Spotify Cardio",
-          getOAuthToken: (cb) => {
-            cb(token.access_token, token);
+          getOAuthToken: async (cb) => {
+            if (token == null) {
+              const stringifiedToken = localStorage?.getItem("spotify-token");
+              if (stringifiedToken && stringifiedToken != "null") {
+                const token = JSON.parse(stringifiedToken);
+                cb(token.access_token, token);
+              }
+            } else {
+              cb(token.access_token, token);
+            }
           },
         });
 
@@ -43,7 +50,6 @@ const PlaybackEnabler: React.FC = ({ children }) => {
 
         // Playback status updates
         player.addListener("player_state_changed", (state) => {
-          setPlayerState(state as PlayerState);
           console.log(state);
         });
 
@@ -58,41 +64,23 @@ const PlaybackEnabler: React.FC = ({ children }) => {
         });
 
         // Connect to the player!
-        player.connect();
-        console.log(player);
-        playerRef.current = player;
-      };
-    }
-  }, [token, playerRef]);
-
-  useEffect(() => {
-    let isSubbed = true;
-    if (playerRef.current && isSubbed) {
-      playerRef.current
-        .getCurrentState()
-        .then((state) => {
-          setPlayerState(state);
-        })
-        .catch(console.error);
-    }
-    const timerId = setInterval(() => {
-      if (playerRef.current && isSubbed) {
-        playerRef.current
-          ?.getCurrentState()
-          .then((state) => {
-            setPlayerState(state);
+        player
+          .connect()
+          .then((success, err) => {
+            console.log("Connection success");
+            if (player && success) {
+              setPlayerInstance(player);
+            } else {
+              console.error(err);
+            }
           })
           .catch(console.error);
-      }
-    }, 2000);
-    return () => {
-      isSubbed = false;
-      clearInterval(timerId);
-    };
-  }, [playerRef.current, token]);
-  console.log(playerState);
+      };
+    }
+  }, [playerInstance, token]);
+
   return (
-    <PlayerContext.Provider value={{ player: playerRef.current, playerState }}>
+    <PlayerContext.Provider value={{ playerInstance }}>
       {children}
     </PlayerContext.Provider>
   );

@@ -127,27 +127,27 @@ const SearchUI: React.FC = ({}) => {
   const [query, setQuery] = useState<string>("");
   const [submitCount, setSubmitCount] = useState<number>(0);
 
-  const search = useCallback(
-    async (token: SpotifyTokenType | null) => {
-      if (token == null) return Promise.reject("No token present");
-      try {
-        const response = await fetch(`/api/search`, {
-          method: "POST",
-          body: JSON.stringify({ query, token }),
-        });
-        const json = await response.json();
-        return { data: json as TracksSearchResponseType };
-      } catch (e) {
-        return e;
-      }
-    },
-    [submitCount]
-  );
+  const search = useCallback(async () => {
+    if (token == null) return Promise.reject("No token present");
+    if (query == "") return Promise.resolve({ data: [], error: null });
+    try {
+      const response = await fetch(`/api/search`, {
+        method: "POST",
+        body: JSON.stringify({ query, token }),
+      });
+      const json = await response.json();
+      return { data: json as TracksSearchResponseType };
+    } catch (e) {
+      return e;
+    }
+  }, [submitCount, token]);
 
   const { loading, data, error } = useTableState<TracksSearchResponseType>(
     search,
     token
   );
+
+  console.log(loading, data, error);
 
   return (
     <>

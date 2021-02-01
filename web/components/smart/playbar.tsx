@@ -4,6 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import RadioGroup, { StyledFieldSet } from "./../radio-group";
 import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
+import { play, pause, togglePlay, getPlayerState } from "./playback-api-calls";
+import { AuthContext, SpotifyTokenType } from "pages/_app";
 // import { AuthContext } from "pages/_app";
 
 const PlaybarBGContainer = styled.div`
@@ -53,13 +55,33 @@ const PlayDetails: React.FC<PlayDetailsProps> = ({
 const Playbar: React.FC = ({}) => {
   // const { setToken } = useContext(AuthContext);
   const [value, setValue] = useState<string>("pause");
-  const { playerState, player } = useContext(PlayerContext);
+  const { playerInstance } = useContext(PlayerContext);
+  const [playerState, setPlayerState] = useState<PlayerState | null>(null);
+  const { token, setToken } = useContext(AuthContext);
   useEffect(() => {
-    if (playerState?.paused == false) {
+    if (playerState?.is_playing) {
       setValue("play");
     }
-  }, [playerState?.paused]);
+  }, [playerState?.is_playing]);
 
+  useEffect(() => {
+    let isSubscribed = true;
+    console.log(isSubscribed);
+    const timerID = setInterval(async () => {
+      if (playerInstance && isSubscribed && token) {
+        const playerState = await getPlayerState({
+          playerInstance,
+          token: token as SpotifyTokenType,
+        });
+        console.log(playerState);
+        setPlayerState(playerState);
+      }
+    }, 2000);
+
+    return () => {
+      clearInterval(timerID);
+    };
+  }, [playerInstance, token]);
   return (
     <PlaybarBGContainer>
       <PlaybarContainer>
@@ -79,9 +101,14 @@ const Playbar: React.FC = ({}) => {
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
             onSelect={() => {
-              if (player && playerState) {
-                setValue("play");
-                player.togglePlay();
+              if (playerInstance && playerState) {
+                togglePlay({
+                  playerInstance,
+                  token: token as SpotifyTokenType,
+                  setToken,
+                }).then(() => {
+                  setValue("play");
+                });
               }
             }}
           >
@@ -91,8 +118,11 @@ const Playbar: React.FC = ({}) => {
             disabled={playerState === null}
             isActive={playerState != null && value === "pause"}
             onSelect={() => {
-              if (player) {
-                player.pause().then(() => setValue("pause"));
+              if (playerInstance && token) {
+                pause({
+                  playerInstance,
+                  token: token as SpotifyTokenType,
+                }).then(() => setValue("paused"));
               }
             }}
           >
@@ -113,7 +143,7 @@ const Playbar: React.FC = ({}) => {
             <PlayDetails
               timestamp={playerState.timestamp}
               position={playerState.position}
-              name={playerState?.track_window.current_track.name}
+              name={playerState?.track_window?.current_track.name ?? "lol"}
               duration={playerState.duration}
             ></PlayDetails>
           ) : (
