@@ -189,8 +189,8 @@ const SearchUI: React.FC = ({}) => {
 
 export const PlaylistCreator = () => {
   const { token, setToken } = useContext(AuthContext);
-  const { push } = useRouter();
 
+  const { push } = useRouter();
   const authToken = token as SpotifyTokenType;
   useEffect(() => {
     const getUser = async () => {

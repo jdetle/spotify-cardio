@@ -42,6 +42,6 @@ export default async (req: NowRequest, res: NowResponse) => {
     res.send(refreshed);
   } else {
     res.statusCode = 500;
-    res.send("Something went wrong");
+    res.send(refreshed);
   }
 };

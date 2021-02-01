@@ -25,11 +25,10 @@ const scopes = [
 const login = async (req: NowRequest) => {
   const state = req.query.state as string;
   const code_challenge = req.query.code_challenge as string;
+  const redirect_base = req.query.redirect_base as string;
   const getParams = async () => {
     const client_id = process.env.SPOTIFY_CLIENT_ID;
-    const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
-      ? process.env.SPOTIFY_REDIRECT_URI
-      : "http://localhost:3000/callback";
+    const redirect_uri = `${redirect_base}callback`;
     if (!client_id) {
       throw new Error("No client id");
     }
@@ -58,13 +57,12 @@ const login = async (req: NowRequest) => {
   }
 };
 
-export default (request: NowRequest, res: NowResponse) => {
-  login(request)
-    .then((data) => {
-      res.send(data?.url);
-    })
-    .catch((e) => {
-      console.error(e);
-      res.send(e);
-    });
+export default async (request: NowRequest, res: NowResponse) => {
+  try {
+    const loginData = await login(request);
+    res.send(loginData.url);
+  } catch (e) {
+    console.error(e);
+    res.send(e);
+  }
 };

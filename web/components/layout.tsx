@@ -4,6 +4,9 @@ import StyledHeader from "./header";
 import T from "./typography";
 import Head from "next/head";
 import Link from "next/link";
+import { useContext } from "react";
+
+import { AuthContext } from "../pages/_app";
 
 const Layout = styled.div`
   display: grid;
@@ -29,6 +32,11 @@ const Layout = styled.div`
   }
   main {
     grid-area: 2 / 1 / 3 / 2;
+    background: linear-gradient(
+      180deg,
+      ${(props) => props.theme.colors.gray2} 0%,
+      ${(props) => props.theme.colors.gray5} 100%
+    );
   }
 
   footer {
@@ -37,10 +45,14 @@ const Layout = styled.div`
 `;
 
 const LayoutWithChildren = ({ children, title = "spotify cardio" }) => {
+  const { token } = useContext(AuthContext);
   return (
     <Layout>
       <Head>
         <title>{title}</title>
+        {token && token.access_token && (
+          <script src="https://sdk.scdn.co/spotify-player.js"></script>
+        )}
       </Head>
       <StyledHeader aria-label="Header containing links to Home" tabIndex={0}>
         <nav role="navigation">

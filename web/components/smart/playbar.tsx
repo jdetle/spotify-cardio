@@ -10,6 +10,11 @@ import { AuthContext } from "pages/_app";
 const PlaybarBGContainer = styled.div`
   grid-area: 4 / 1 / 5 / 5;
   background-color: ${(p) => p.theme.colors.gray6};
+  background: linear-gradient(
+    180deg,
+    ${(props) => props.theme.colors.gray4} 0%,
+    ${(props) => props.theme.colors.gray6} 100%
+  );
   display: grid;
   grid-template-rows: 2rem 1fr 2rem;
   grid-template-columns: 4rem 1fr 1fr;
@@ -36,7 +41,6 @@ const Playbar: React.FC = ({}) => {
   const { setToken } = useContext(AuthContext);
   const [value, setValue] = useState<string>("pause");
   const { playerState, player } = useContext(PlayerContext);
-
   useEffect(() => {
     if (playerState?.paused == false) {
       setValue("play");
