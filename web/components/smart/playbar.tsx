@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import RadioGroup, { StyledFieldSet } from "./../radio-group";
 import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
-import { play, pause, togglePlay, getPlayerState } from "./playback-api-calls";
+import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
 // import { AuthContext } from "pages/_app";
 

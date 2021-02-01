@@ -1,5 +1,4 @@
-import { getPlayerState, play } from "components/smart/playback-api-calls";
-import { AuthContext, SpotifyTokenType } from "pages/_app";
+import { AuthContext } from "pages/_app";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type PlayerContextType = {
@@ -10,7 +9,7 @@ export const PlayerContext = createContext<PlayerContextType>({
   playerInstance: null,
 });
 const PlaybackEnabler: React.FC = ({ children }) => {
-  const { token, setToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [playerInstance, setPlayerInstance] = useState<PlayerInstance | null>(
     null
   );

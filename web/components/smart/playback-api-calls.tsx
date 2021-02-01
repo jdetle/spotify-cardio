@@ -3,10 +3,10 @@ import { Dispatch, SetStateAction } from "react";
 
 const SPOTIFY_API_BASE = `https://api.spotify.com`;
 const GET_CURRENTLY_PLAYING = `${SPOTIFY_API_BASE}/v1/me/player/currently-playing`;
-const PUT_PLAYER = `${SPOTIFY_API_BASE}/v1/me/player`;
-const PLAY = `${SPOTIFY_API_BASE}/v1/me/player/play`;
+// const PUT_PLAYER = `${SPOTIFY_API_BASE}/v1/me/player`;
+// const PLAY = `${SPOTIFY_API_BASE}/v1/me/player/play`;
 
-const refresh = async (
+export const refresh = async (
   refresh_token: string,
   setToken: Dispatch<SetStateAction<TokenTypes>>
 ) => {

@@ -4,9 +4,6 @@ import StyledHeader from "./header";
 import T from "./typography";
 import Head from "next/head";
 import Link from "next/link";
-import { useContext } from "react";
-
-import { AuthContext } from "../pages/_app";
 
 const Layout = styled.div`
   display: grid;
@@ -44,7 +41,6 @@ const LayoutWithChildren = ({ children, title = "spotify cardio" }) => {
     <Layout>
       <Head>
         <title>{title}</title>
-        <script src="https://sdk.scdn.co/spotify-player.js"></script>
       </Head>
       <StyledHeader aria-label="Header containing links to Home" tabIndex={0}>
         <nav role="navigation">

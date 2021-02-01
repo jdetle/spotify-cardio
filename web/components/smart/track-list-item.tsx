@@ -14,7 +14,7 @@ import { play } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
 
 const TrackListItem: React.FC<TrackType> = (props) => {
-  const { token, setToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { addTrack } = useContext(PlaylistContext);
   const { playerInstance } = useContext(PlayerContext);
 
