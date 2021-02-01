@@ -1,4 +1,5 @@
 import { AuthContext } from "pages/_app";
+import { useRef } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type PlayerContextType = {
@@ -13,9 +14,10 @@ export const PlayerContext = createContext<PlayerContextType>({
 const PlaybackEnabler: React.FC = ({ children }) => {
   const { token } = useContext(AuthContext);
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const [playerInstance, setPlayer] = useState<PlayerInstance | null>(null);
+  const playerRef = useRef<PlayerInstance | null>(null);
   useEffect(() => {
-    if (token) {
+    console.log(playerRef.current, token);
+    if (token && playerRef.current == null) {
       window.onSpotifyWebPlaybackSDKReady = () => {
         // @ts-ignore
         const player = new (Spotify as Spotify).Player({
@@ -57,34 +59,40 @@ const PlaybackEnabler: React.FC = ({ children }) => {
 
         // Connect to the player!
         player.connect();
-        setPlayer(player);
+        console.log(player);
+        playerRef.current = player;
       };
     }
-  }, [token]);
+  }, [token, playerRef]);
 
   useEffect(() => {
-    if (playerInstance != null) {
-      playerInstance?.getCurrentState().then((state) => {
-        setPlayerState(state);
-      });
+    let isSubbed = true;
+    if (playerRef.current && isSubbed) {
+      playerRef.current
+        .getCurrentState()
+        .then((state) => {
+          setPlayerState(state);
+        })
+        .catch(console.error);
     }
     const timerId = setInterval(() => {
-      if (playerInstance != null) {
-        playerInstance
+      if (playerRef.current && isSubbed) {
+        playerRef.current
           ?.getCurrentState()
           .then((state) => {
             setPlayerState(state);
           })
-          .catch((e) => console.error(e));
+          .catch(console.error);
       }
     }, 2000);
     return () => {
+      isSubbed = false;
       clearInterval(timerId);
     };
-  }, [playerInstance, token]);
+  }, [playerRef.current, token]);
   console.log(playerState);
   return (
-    <PlayerContext.Provider value={{ player: playerInstance, playerState }}>
+    <PlayerContext.Provider value={{ player: playerRef.current, playerState }}>
       {children}
     </PlayerContext.Provider>
   );

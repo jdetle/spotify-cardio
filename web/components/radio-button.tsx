@@ -8,8 +8,15 @@ type RadioButtonProps = {
 
 const StyledButton = styled.button<{ isActive: boolean }>`
   margin-right: 0.5rem;
-  border-radius: 1rem;
-  width: 4rem;
+  border-radius: 0.75rem;
+  color: ${(p) => p.theme.colors.gray6};
+  background: linear-gradient(
+    293deg,
+    ${(props) => props.theme.colors.gray1} 0%,
+    ${(props) => props.theme.colors.purple6} 35%,
+    ${(props) => props.theme.colors.blue1} 100%
+  );
+  width: 3rem;
   ${(props) =>
     props.isActive &&
     css`

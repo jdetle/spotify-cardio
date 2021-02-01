@@ -35,6 +35,7 @@ const PlaylistContainer = styled.div`
       ${(props) => props.theme.colors.gray6} 33%,
       ${(props) => props.theme.colors.blue3} 73%
     );
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

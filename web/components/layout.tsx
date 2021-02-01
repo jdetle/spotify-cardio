@@ -32,11 +32,6 @@ const Layout = styled.div`
   }
   main {
     grid-area: 2 / 1 / 3 / 2;
-    background: linear-gradient(
-      180deg,
-      ${(props) => props.theme.colors.gray2} 0%,
-      ${(props) => props.theme.colors.gray5} 100%
-    );
   }
 
   footer {
