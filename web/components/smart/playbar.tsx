@@ -51,6 +51,7 @@ const Playbar: React.FC = ({}) => {
     <PlaybarBGContainer>
       <PlaybarContainer>
         <RadioGroup legend="Playback">
+          {/*
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "back"}
@@ -60,6 +61,7 @@ const Playbar: React.FC = ({}) => {
           >
             <FaBackward />
           </RadioButton>
+          */}
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
@@ -88,6 +90,7 @@ const Playbar: React.FC = ({}) => {
           >
             <FaPause />
           </RadioButton>
+          {/*
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "forward"}
@@ -97,6 +100,7 @@ const Playbar: React.FC = ({}) => {
           >
             <FaForward />
           </RadioButton>
+          */}
         </RadioGroup>
       </PlaybarContainer>
       <PlayDetails>
