@@ -164,50 +164,6 @@ const Layout = styled.div`
   }
 `;
 
-const UnAuthLayout = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 80px 1fr 50px;
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(
-    176deg,
-    ${(p) => p.theme.colors.purple1} 0%,
-    ${(p) => p.theme.colors.purple2} 35%,
-    ${(p) => p.theme.colors.purple1} 100%
-  );
-  header {
-    grid-area: 1 / 1 / 2 / 1;
-  }
-  nav {
-    margin-left: 1rem;
-    grid-area: 1/ 1 / 1 / 2;
-    font-size: 2rem;
-    font-weight: 500;
-    width: 100%;
-    @media (max-width: 420px) {
-      font-size: 1rem;
-    }
-  }
-  main {
-    grid-area: 1 / 1/ 3/ 3;
-    display: grid;
-    grid-template-columns: 10rem 1fr 1fr 10rem;
-    grid-template-rows: 10rem 1fr 1fr 10rem;
-    h1 {
-    }
-    a {
-      grid-area: 3 / 2 / 2/ 3;
-    }
-  }
-
-  footer {
-    grid-area: 3 / 1 / 4 / 2;
-  }
-`;
-
 const SearchResults: React.FC<{ query: string }> = ({ query }) => {
   const { token } = useContext(AuthContext);
   const [debouncedQuery] = useDebounce(query, 1000);

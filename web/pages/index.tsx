@@ -59,7 +59,7 @@ const Layout = styled.div`
     padding: auto;
     h1 {
       margin: 10rem 0rem 10rem 0rem;
-      letter-spacing: 0rem;
+
       font-weight: 800;
     }
     a {
