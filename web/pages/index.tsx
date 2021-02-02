@@ -6,6 +6,7 @@ import T from "./../components/typography";
 import { AuthContext } from "./_app";
 
 import { v4 } from "uuid";
+import { useRouter } from "next/router";
 
 async function sha256(plain) {
   const encoder = new TextEncoder();
@@ -24,7 +25,7 @@ const Landing = () => {
   const Title = "Spotify Cardio";
   const [loginLink, setLoginLink] = useState<string>("");
   const { token, setAuthState, setVerifier } = useContext(AuthContext);
-
+  const { push } = useRouter();
   useEffect(() => {
     const getLink = async () => {
       try {
@@ -53,9 +54,7 @@ const Landing = () => {
     getLink();
   }, []);
   useEffect(() => {
-    /*
     if (token && token.access_token) push("/playlist-creator");
-    */
   }, [token]);
   return (
     <div>

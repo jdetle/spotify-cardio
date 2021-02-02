@@ -1,35 +1,50 @@
 import styled from "styled-components";
 import { FaPlay, FaPause /* FaForward, FaBackward */ } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from "react";
-import RadioGroup, { StyledFieldSet } from "./../radio-group";
 import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
 import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
 // import { AuthContext } from "pages/_app";
 
+type RadioGroupProps = {
+  legend: string;
+};
+
+const StyledFieldSet = styled.fieldset`
+  legend {
+  }
+`;
+const RadioGroup: React.FC<RadioGroupProps> = ({ children, legend }) => {
+  return (
+    <StyledFieldSet>
+      <legend>{legend}</legend>
+      {children}
+    </StyledFieldSet>
+  );
+};
+
+const PlayDetailsContainer = styled.div`
+  grid-area: 3/ 2 /4 / 3;
+`;
+/*
 const PlaybarBGContainer = styled.div`
-  grid-area: 4 / 1 / 5 / 5;
   display: grid;
   grid-template-rows: 2rem 1fr 2rem;
   grid-template-columns: 4rem 1fr 1fr;
 `;
-
+*/
 const PlaybarContainer = styled.div`
-  grid-area: 2 / 2 /3 / 3;
+  display: grid;
   border-radius: 0.3rem;
   width: 100%;
   display: grid;
-  grid-template-columns: 1rem 1fr 1rem;
-  grid-template-rows: 1rem 1fr 1rem;
+  grid-template-columns: 1rem 1fr 10rem 1rem;
+  grid-template-rows: 1rem 1fr 3rem;
   ${StyledFieldSet} {
-    grid-area: 2 / 2 / 3 / 3;
+    grid-area: 2 / 3 / 2 / 3;
     border-radius: 1rem;
   }
-`;
-
-const PlayDetailsContainer = styled.div`
-  grid-area: 3/ 2 /4 / 3;
 `;
 
 type PlayDetailsProps = Pick<
@@ -83,20 +98,9 @@ const Playbar: React.FC = ({}) => {
     };
   }, [playerInstance, token]);
   return (
-    <PlaybarBGContainer>
+    <footer>
       <PlaybarContainer>
         <RadioGroup legend="Web Playback">
-          {/*
-          <RadioButton
-            disabled={playerState === null}
-            isActive={playerState != null && value === "back"}
-            onSelect={() => {
-              setValue("back");
-            }}
-          >
-            <FaBackward />
-          </RadioButton>
-          */}
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
@@ -128,22 +132,12 @@ const Playbar: React.FC = ({}) => {
           >
             <FaPause />
           </RadioButton>
-          {/*
-          <RadioButton
-            disabled={playerState === null}
-            isActive={playerState != null && value === "forward"}
-            onSelect={() => {
-              setValue("forward");
-            }}
-          >
-            <FaForward />
-          </RadioButton>
-          */}
+
           {playerState ? (
             <PlayDetails
               timestamp={playerState.timestamp}
               position={playerState.position}
-              name={playerState?.track_window?.current_track.name ?? "lol"}
+              name={playerState?.track_window?.current_track.name ?? ""}
               duration={playerState.duration}
             ></PlayDetails>
           ) : (
@@ -151,7 +145,7 @@ const Playbar: React.FC = ({}) => {
           )}
         </RadioGroup>
       </PlaybarContainer>
-    </PlaybarBGContainer>
+    </footer>
   );
 };
 

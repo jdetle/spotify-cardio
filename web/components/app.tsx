@@ -30,7 +30,6 @@ const StyledApp = styled.div`
     text-align: center;
     z-index: 1;
     padding: 0;
-    overflow: hidden;
     @media (max-width: 420px) {
       font-size: 7rem;
       margin-top: 4rem;
@@ -57,6 +56,7 @@ html, body{
   overflow: hidden;
   margin: 0;
   height: 100%;
+  letter-spacing: -0.1em;
 }
 #__next {
   height: 100%;  
