@@ -20,16 +20,12 @@ const Callback = () => {
     const getToken = async () => {
       if (query.code && verifier != "") {
         try {
-          const qp = new URLSearchParams([
-            ["code", query.code as string],
-            ["code_verifier", verifier],
-            ["redirect_base", window.location.href.split("?")[0]],
-          ]);
           const authorizationResp = await fetch(
-            `/api/spotify-challenge?${qp.toString()}`
+            `/api/spotify-challenge?code=${query.code}&code_verifier=${verifier}`
           );
           if (authorizationResp.status === 200) {
             setToken(await authorizationResp.json());
+            push("/playlist-creator");
           }
         } catch (e) {
           // console.log(e);
