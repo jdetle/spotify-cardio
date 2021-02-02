@@ -1,20 +1,15 @@
 import styled from "styled-components";
-import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
+import { FaPlay, FaPause /* FaForward, FaBackward */ } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from "react";
 import RadioGroup, { StyledFieldSet } from "./../radio-group";
 import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
-import { play, pause } from "./playback-api-calls";
-import { AuthContext } from "pages/_app";
+import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
+import { AuthContext, SpotifyTokenType } from "pages/_app";
+// import { AuthContext } from "pages/_app";
 
 const PlaybarBGContainer = styled.div`
   grid-area: 4 / 1 / 5 / 5;
-  background-color: ${(p) => p.theme.colors.gray6};
-  background: linear-gradient(
-    180deg,
-    ${(props) => props.theme.colors.gray4} 0%,
-    ${(props) => props.theme.colors.gray6} 100%
-  );
   display: grid;
   grid-template-rows: 2rem 1fr 2rem;
   grid-template-columns: 4rem 1fr 1fr;
@@ -33,24 +28,65 @@ const PlaybarContainer = styled.div`
   }
 `;
 
-const PlayDetails = styled.div`
+const PlayDetailsContainer = styled.div`
   grid-area: 3/ 2 /4 / 3;
 `;
 
+type PlayDetailsProps = Pick<
+  PlayerState,
+  "duration" | "position" | "timestamp"
+> & {
+  name: string;
+};
+const PlayDetails: React.FC<PlayDetailsProps> = ({
+  name,
+  duration,
+  position,
+}) => {
+  return (
+    <PlayDetailsContainer>
+      {name}
+      {duration}
+      {position}
+    </PlayDetailsContainer>
+  );
+};
+
 const Playbar: React.FC = ({}) => {
-  const { setToken } = useContext(AuthContext);
+  // const { setToken } = useContext(AuthContext);
   const [value, setValue] = useState<string>("pause");
-  const { playerState, player } = useContext(PlayerContext);
+  const { playerInstance } = useContext(PlayerContext);
+  const [playerState, setPlayerState] = useState<PlayerState | null>(null);
+  const { token, setToken } = useContext(AuthContext);
   useEffect(() => {
-    if (playerState?.paused == false) {
+    if (playerState?.is_playing) {
       setValue("play");
     }
-  }, [playerState?.paused]);
+  }, [playerState?.is_playing]);
 
+  useEffect(() => {
+    let isSubscribed = true;
+    console.log(isSubscribed);
+    const timerID = setInterval(async () => {
+      if (playerInstance && isSubscribed && token) {
+        const playerState = await getPlayerState({
+          playerInstance,
+          token: token as SpotifyTokenType,
+        });
+        console.log(playerState);
+        setPlayerState(playerState);
+      }
+    }, 2000);
+
+    return () => {
+      clearInterval(timerID);
+    };
+  }, [playerInstance, token]);
   return (
     <PlaybarBGContainer>
       <PlaybarContainer>
-        <RadioGroup legend="Playback">
+        <RadioGroup legend="Web Playback">
+          {/*
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "back"}
@@ -60,16 +96,18 @@ const Playbar: React.FC = ({}) => {
           >
             <FaBackward />
           </RadioButton>
+          */}
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
             onSelect={() => {
-              if (player && playerState) {
-                setValue("play");
-                play({
-                  spotify_uri: playerState.track_window.current_track.uri,
+              if (playerInstance && playerState) {
+                togglePlay({
+                  playerInstance,
+                  token: token as SpotifyTokenType,
                   setToken,
-                  playerInstance: player,
+                }).then(() => {
+                  setValue("play");
                 });
               }
             }}
@@ -80,14 +118,17 @@ const Playbar: React.FC = ({}) => {
             disabled={playerState === null}
             isActive={playerState != null && value === "pause"}
             onSelect={() => {
-              if (player) {
-                pause({ playerInstance: player, setToken });
-                setValue("pause");
+              if (playerInstance && token) {
+                pause({
+                  playerInstance,
+                  token: token as SpotifyTokenType,
+                }).then(() => setValue("paused"));
               }
             }}
           >
             <FaPause />
           </RadioButton>
+          {/*
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "forward"}
@@ -97,14 +138,19 @@ const Playbar: React.FC = ({}) => {
           >
             <FaForward />
           </RadioButton>
+          */}
+          {playerState ? (
+            <PlayDetails
+              timestamp={playerState.timestamp}
+              position={playerState.position}
+              name={playerState?.track_window?.current_track.name ?? "lol"}
+              duration={playerState.duration}
+            ></PlayDetails>
+          ) : (
+            <></>
+          )}
         </RadioGroup>
       </PlaybarContainer>
-      <PlayDetails>
-        {playerState?.position}
-        {playerState?.track_window.current_track.name}
-        {playerState?.timestamp}
-        {playerState?.duration}
-      </PlayDetails>
     </PlaybarBGContainer>
   );
 };

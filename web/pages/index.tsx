@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 
 import Button from "../components/a";
 import Container from "./../components/container";
+import T from "./../components/typography";
 import { AuthContext } from "./_app";
 
 import { v4 } from "uuid";
@@ -59,16 +60,22 @@ const Landing = () => {
   return (
     <div>
       <Container direction={"column"} center>
-        <div color="green1" aria-hidden={true} id="index_title" role="banner">
+        <T.h1 aria-hidden={true} id="index_title" role="banner">
           {Title}
-        </div>
+        </T.h1>
       </Container>
       <Container direction={"column"} center>
         {token && token.access_token ? (
-          <Button href="/playlist-creator">Go Make a Playlist</Button>
+          <Button
+            backgroundColor="green1"
+            role="button"
+            href="/playlist-creator"
+          >
+            Go Make a Playlist
+          </Button>
         ) : (
-          <Button href={loginLink}>
-            Authenticate with Spotify To Get Started
+          <Button backgroundColor="green" role="button" href={loginLink}>
+            Make A Cardio Playlist
           </Button>
         )}
       </Container>

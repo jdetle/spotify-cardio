@@ -44,10 +44,11 @@ const span = styled.span`
 `;
 const pre = styled.pre``;
 const h1 = styled.h1<{ width?: string }>`
+  letter-spacing: -0.04em !important;
   margin: 0;
-  font-size: 5rem;
   font-weight: 900;
-  line-height: 5rem;
+  line-height: 1;
+  font-size: 104px;
   @media (max-width: 420px) {
     font-size: 2rem;
     line-height: 2rem;

@@ -5,7 +5,7 @@ type PlayerState = {
   context: { uri: string | null; metadata: unknown };
   disallows: { resuming: boolean; skipping_prev: boolean };
   duration: number;
-  paused: boolean;
+  is_playing: boolean;
   position: number;
   repeat_mode: number;
   restrictions: {
@@ -83,11 +83,11 @@ type PlayerInstance = {
   disconnect: () => void;
   addListener: () => void;
   removeListener: () => void;
-  getCurrentState: () => Promise<PlayerStat>;
+  getCurrentState: () => Promise<PlayerState>;
   setName: () => void;
   getVolume: () => void;
   setVolume: () => void;
-  pause: () => void;
+  pause: () => Promise<void>;
   resume: () => void;
   togglePlay: () => void;
   seek: () => void;
@@ -101,5 +101,6 @@ interface Spotify {
 }
 
 interface Window extends Window {
-  onSpotifyWebPlaybackSDKReady: () => void;
+  onSpotifyWebPlaybackSDKReady: (() => void) | undefined;
+  player: PlayerInstance | null;
 }
