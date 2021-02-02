@@ -30,7 +30,6 @@ const Callback = () => {
           );
           if (authorizationResp.status === 200) {
             setToken(await authorizationResp.json());
-            push("/playlist-creator");
           }
         } catch (e) {
           // console.log(e);

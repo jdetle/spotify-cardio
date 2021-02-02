@@ -15,6 +15,17 @@ const StyledFieldSet = styled.fieldset`
   legend {
   }
 `;
+
+const Footer = styled.footer`
+  height: 100%;
+  width: 100%;
+  grid-area: 3 / 1 / 2 / 3;
+  background: linear-gradient(
+    20deg,
+    ${(props) => props.theme.colors.gray1} 0%,
+    ${(props) => props.theme.colors.gray2} 100%
+  );
+`;
 const RadioGroup: React.FC<RadioGroupProps> = ({ children, legend }) => {
   return (
     <StyledFieldSet>
@@ -98,7 +109,7 @@ const Playbar: React.FC = ({}) => {
     };
   }, [playerInstance, token]);
   return (
-    <footer>
+    <Footer>
       <PlaybarContainer>
         <RadioGroup legend="Web Playback">
           <RadioButton
@@ -145,7 +156,7 @@ const Playbar: React.FC = ({}) => {
           )}
         </RadioGroup>
       </PlaybarContainer>
-    </footer>
+    </Footer>
   );
 };
 

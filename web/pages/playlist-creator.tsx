@@ -114,9 +114,103 @@ const SearchInputContainer = styled.div`
   }
 `;
 
+const Main = styled.main`
+  background-color: ${(p) => p.theme.colors.gray1};
+`;
+
+const Layout = styled.div`
+  grid-area: 1 / 1/ 3/ 3;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: 1fr 90px;
+  grid-template-columns: 235px 1fr;
+
+  header {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  nav {
+    background-color: #000;
+    grid-area: 1 / 1 / 2 / 2;
+    font-size: 2rem;
+    font-weight: 500;
+    width: 100%;
+    @media (max-width: 420px) {
+      font-size: 1rem;
+    }
+  }
+  main {
+    grid-area: 1 / 2 / 2 / 2;
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+
+    height: 100%;
+    width: 100%;
+
+    ${SearchContainer} {
+      height: 100%;
+      width: 100%;
+      grid-area: 1 / 1 / 2 / 1;
+    }
+    ${DataContainer} {
+      height: 100%;
+      width: 100%;
+      grid-area: 2 / 1 / 3 / 1;
+    }
+  }
+
+  footer {
+    display: grid;
+  }
+`;
+
+const UnAuthLayout = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 80px 1fr 50px;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    176deg,
+    ${(p) => p.theme.colors.purple1} 0%,
+    ${(p) => p.theme.colors.purple2} 35%,
+    ${(p) => p.theme.colors.purple1} 100%
+  );
+  header {
+    grid-area: 1 / 1 / 2 / 1;
+  }
+  nav {
+    margin-left: 1rem;
+    grid-area: 1/ 1 / 1 / 2;
+    font-size: 2rem;
+    font-weight: 500;
+    width: 100%;
+    @media (max-width: 420px) {
+      font-size: 1rem;
+    }
+  }
+  main {
+    grid-area: 1 / 1/ 3/ 3;
+    display: grid;
+    grid-template-columns: 10rem 1fr 1fr 10rem;
+    grid-template-rows: 10rem 1fr 1fr 10rem;
+    h1 {
+    }
+    a {
+      grid-area: 3 / 2 / 2/ 3;
+    }
+  }
+
+  footer {
+    grid-area: 3 / 1 / 4 / 2;
+  }
+`;
+
 const SearchResults: React.FC<{ query: string }> = ({ query }) => {
   const { token } = useContext(AuthContext);
-  const [debouncedQuery] = useDebounce(query, 2000);
+  const [debouncedQuery] = useDebounce(query, 1000);
   const search = useCallback(async () => {
     if (token == null) return Promise.reject("No token present");
     if (query == "") return Promise.resolve({ data: [], error: null });
@@ -216,17 +310,17 @@ export const PlaylistCreator = () => {
   }, [token]);
 
   return (
-    <>
+    <Layout>
       <nav></nav>
-      <main>
+      <Main>
         <SearchUI query={query} setQuery={setQuery} />
         <DataContainer>
           <SearchResults query={query} />
           <PlaylistView />
         </DataContainer>
-      </main>
+      </Main>
       <Playbar />
-    </>
+    </Layout>
   );
 };
 

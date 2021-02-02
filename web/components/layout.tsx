@@ -1,9 +1,5 @@
-import styled from "styled-components";
-import StyledFooter from "./footer";
-import StyledHeader from "./header";
 import Head from "next/head";
-import { AuthContext } from "pages/_app";
-import { useContext } from "react";
+import styled from "styled-components";
 
 export const SearchContainer = styled.section`
   width: 100%;
@@ -44,7 +40,7 @@ export const SearchResultsContainer = styled.div`
 export const PlaylistContainer = styled.div`
   grid-area: 1 / 2 / 2 / 2;
 `;
-const AuthLayout = styled.div`
+const Layout = styled.div`
   display: grid;
   height: 100%;
   width: 100%;
@@ -68,7 +64,7 @@ const AuthLayout = styled.div`
     grid-area: 1 / 2 / 2 / 2;
     display: grid;
     grid-template-rows: 1fr 3fr;
-    background-color: ${(p) => p.theme.colors.gray1};
+
     height: 100%;
     width: 100%;
 
@@ -87,7 +83,7 @@ const AuthLayout = styled.div`
   footer {
     height: 100%;
     width: 100%;
-    grid-area: 2 / 1 / 3 / 3;
+    grid-area: 3 / 1 / 1 / 3;
     display: grid;
     background: linear-gradient(
       20deg,
@@ -97,56 +93,14 @@ const AuthLayout = styled.div`
   }
 `;
 
-const UnAuthLayout = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 80px 1fr 50px;
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-  height: 100%;
-  width: 100%;
-
-  header {
-    grid-area: 1 / 1 / 2 / 1;
-  }
-  nav {
-    margin-left: 1rem;
-    grid-area: 1/ 1 / 1 / 2;
-    font-size: 2rem;
-    font-weight: 500;
-    width: 100%;
-    @media (max-width: 420px) {
-      font-size: 1rem;
-    }
-  }
-  section {
-    grid-area: 2 / 1 / 3 / 2;
-  }
-
-  footer {
-    grid-area: 3 / 1 / 4 / 2;
-  }
-`;
-
-const LayoutWithChildren = ({ children, title = "spotify cardio" }) => {
-  const { token } = useContext(AuthContext);
-
-  return token == null || Boolean(token && token?.error) ? (
-    <UnAuthLayout>
+const LayoutWithChildren = ({ children, title = "SpotifyCardio" }) => {
+  return (
+    <>
       <Head>
         <title>{title}</title>
       </Head>
-      <StyledHeader
-        aria-label="Header containing links to Home"
-        tabIndex={0}
-      ></StyledHeader>
-      <main>{children}</main>
-      <StyledFooter role="contentinfo">
-        {`All rights reserved: John Detlefs ${new Date().getFullYear()}`}
-      </StyledFooter>
-    </UnAuthLayout>
-  ) : (
-    <AuthLayout>{children}</AuthLayout>
+      {children}
+    </>
   );
 };
 export default LayoutWithChildren;

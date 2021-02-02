@@ -67,7 +67,6 @@ const AuthProvider: React.FC = ({ children }) => {
   const [authState, setAuthState] = useState<string>("");
   const [verifier, setVerifier] = useState<string>("");
   const [token, setToken] = useState<SpotifyTokenType | null>(null);
-
   useEffect(() => {
     if (verifier == "" && localStorage) {
       setVerifier(localStorage?.getItem("spotify-verifier") ?? "");

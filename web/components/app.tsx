@@ -7,13 +7,8 @@ const StyledApp = styled.div`
   color: ${(props) => {
     return props.theme.colors.green1;
   }};
-  background: ${(props) => props.theme.colors.gray6};
-  background: linear-gradient(
-    176deg,
-    ${(p) => p.theme.colors.purple1} 0%,
-    ${(p) => p.theme.colors.purple2} 35%,
-    ${(p) => p.theme.colors.purple1} 100%
-  );
+  background: ${(props) => props.theme.colors.gray1};
+
   overflow-x: hidden;
   overflow-y: hidden;
   video,
@@ -24,7 +19,7 @@ const StyledApp = styled.div`
   #index_title {
     color: ${(p) => p.theme.colors.green3};
     margin-bottom: 50px;
-    letter-spacing: -0.04rem;
+    letter-spacing: -0.1rem;
     font-size: 104px;
     font-weight: 900;
     text-align: center;
@@ -56,10 +51,12 @@ html, body{
   overflow: hidden;
   margin: 0;
   height: 100%;
+  background-color: #000;
   letter-spacing: -0.1em;
 }
 #__next {
   height: 100%;  
+  background-color: #000;
   overflow: hidden;
 }`;
 
