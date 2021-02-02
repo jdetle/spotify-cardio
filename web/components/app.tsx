@@ -10,9 +10,9 @@ const StyledApp = styled.div`
   background: ${(props) => props.theme.colors.gray6};
   background: linear-gradient(
     176deg,
-    rgba(215, 215, 215, 1) 0%,
-    rgba(232, 232, 235, 1) 35%,
-    rgba(210, 213, 210, 1) 100%
+    ${(p) => p.theme.colors.purple1} 0%,
+    ${(p) => p.theme.colors.purple2} 35%,
+    ${(p) => p.theme.colors.purple1} 100%
   );
   overflow-x: hidden;
   overflow-y: hidden;
@@ -22,7 +22,10 @@ const StyledApp = styled.div`
     max-width: 100%;
   }
   #index_title {
-    font-size: 14rem;
+    color: ${(p) => p.theme.colors.green3};
+    margin-bottom: 50px;
+    letter-spacing: -0.04rem;
+    font-size: 104px;
     font-weight: 900;
     text-align: center;
     z-index: 1;
@@ -46,9 +49,11 @@ ${normalize()};
 box-sizing: border-box;
 }
 html, body{
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ font-family: Circular, Helvetica, Arial, sans-serif, IosFix;
   overflow: hidden;
   margin: 0;
   height: 100%;
