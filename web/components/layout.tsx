@@ -40,6 +40,7 @@ export const SearchResultsContainer = styled.div`
 export const PlaylistContainer = styled.div`
   grid-area: 1 / 2 / 2 / 2;
 `;
+/*
 const Layout = styled.div`
   display: grid;
   height: 100%;
@@ -92,6 +93,7 @@ const Layout = styled.div`
     );
   }
 `;
+*/
 
 const LayoutWithChildren = ({ children, title = "SpotifyCardio" }) => {
   return (
