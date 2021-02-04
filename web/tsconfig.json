@@ -19,6 +19,7 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "baseUrl": ".",
+    "types": ["cypress","@testing-library/cypress"],
     "typeRoots": [
       "./node_modules/@types",
       "./typings"

@@ -135,7 +135,7 @@ const Landing: React.FC = () => {
             </Button>
           ) : (
             <Button backgroundColor="green" role="button" href={loginLink}>
-              Make A Cardio Playlist
+              Login With Spotify
             </Button>
           )}
         </Container>
