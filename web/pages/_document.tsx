@@ -64,6 +64,12 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
             as="font"
             type="font/woff2"
           ></link>
+          <link
+            rel="icon"
+            sizes="32x32"
+            type="image/png"
+            href="https://open.scdn.co/cdn/images/favicon32.a19b4f5b.png"
+          ></link>
           <meta
             name="Description"
             content="An app to help create spotify playlists"
