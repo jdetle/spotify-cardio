@@ -35,7 +35,7 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
           {this.props.styleTags}
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta charSet="utf-8" />
-          <link rel="icon" type="image/x-icon" href="./static/favicon.ico" />
+          <link rel="icon" type="image/x-icon" href="./static/favicon.png" />
           <link
             rel="stylesheet"
             href="https://open.scdn.co/cdn/build/web-player/web-player.d1458de0.css"
