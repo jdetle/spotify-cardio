@@ -8,6 +8,7 @@ import { App as AppWrapper } from "../components/app";
 import WebPlayback from "../contexts/web-playback";
 import Layout from "../components/layout";
 import { PlaylistProvider } from "contexts/playlist";
+import { useRouter } from "next/router";
 
 export type SpotifyTokenType = {
   access_token: string;
@@ -26,6 +27,8 @@ export type TokenTypes = MergeExclusive<
   MergeExclusive<SpotifyErrorTokenType, SpotifyTokenType>,
   null
 >;
+
+const API_BASE_URL = "https://api.spotify.com/v1";
 
 export const AuthContext = React.createContext<{
   authState: string;
@@ -67,6 +70,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const [authState, setAuthState] = useState<string>("");
   const [verifier, setVerifier] = useState<string>("");
   const [token, setToken] = useState<TokenTypes | null>(null);
+  const { push } = useRouter();
   const setTokenWithLS = (token: TokenTypes) => {
     console.log(token);
     localStorage?.setItem("spotify-auth-state", "");
@@ -103,6 +107,30 @@ const AuthProvider: React.FC = ({ children }) => {
       console.error(token);
       setTokenWithLS(null);
     }
+  }, [token]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (token?.access_token) {
+        try {
+          const headers = new Headers();
+          headers.set("Authorization", `Bearer ${token.access_token}`);
+          const resp = await fetch(`${API_BASE_URL}/me`, {
+            headers,
+          });
+          const user = await resp.json();
+
+          if (!user.email) {
+            push("/");
+            setTokenWithLS(null);
+          }
+        } catch (e) {
+          console.error(e);
+          push("/");
+        }
+      }
+    };
+    getUser();
   }, [token]);
   return (
     <AuthContext.Provider
