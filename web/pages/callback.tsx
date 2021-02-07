@@ -4,7 +4,6 @@ import { AuthContext } from "./_app";
 
 const Callback = () => {
   const { query, push } = useRouter();
-
   const { verifier, authState, setToken } = useContext(AuthContext);
   useEffect(() => {
     if (query.state != "") {
@@ -20,15 +19,18 @@ const Callback = () => {
     const getToken = async () => {
       if (query.code && verifier != "") {
         try {
+          const redirect_uri = window.location.href.split("?")[0];
           const authorizationResp = await fetch(
-            `/api/spotify-challenge?code=${query.code}&code_verifier=${verifier}`
+            `/api/spotify-challenge?code=${query.code}&code_verifier=${verifier}&redirect_uri=${redirect_uri}`
           );
+          const token = await authorizationResp.json();
+          console.log(token);
           if (authorizationResp.status === 200) {
-            setToken(await authorizationResp.json());
+            setToken(token);
             push("/playlist-creator");
           }
         } catch (e) {
-          // console.log(e);
+          console.log(e);
         }
       }
     };

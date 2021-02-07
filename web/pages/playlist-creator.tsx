@@ -168,7 +168,11 @@ const SearchResults: React.FC<{ query: string }> = ({ query }) => {
   const { token } = useContext(AuthContext);
   const [debouncedQuery] = useDebounce(query, 1000);
   const search = useCallback(async () => {
-    if (token == null) return Promise.reject("No token present");
+    console.log(token);
+    if (token == null) {
+      console.error("no token present");
+      return Promise.reject("No token present");
+    }
     if (query == "") return Promise.resolve({ data: [], error: null });
     try {
       const response = await fetch(`/api/search`, {
@@ -233,7 +237,7 @@ const SearchUI: React.FC<{
 
 export const PlaylistCreator = () => {
   const [query, setQuery] = useState<string>("");
-  const { token, setToken } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { push } = useRouter();
   const authToken = token as SpotifyTokenType;
 
@@ -247,17 +251,9 @@ export const PlaylistCreator = () => {
             headers,
           });
           const user = await resp.json();
-          if (user.error && user.error.status == 401) {
-            const response = await fetch("/api/refresh", {
-              method: "POST",
-              body: JSON.stringify({ refresh_token: authToken.refresh_token }),
-            });
-            const refreshedToken = await response.json();
-            setToken(refreshedToken);
-          }
+          if (user == null) push("/");
+          console.log(user);
         } catch (e) {
-          console.log(e);
-          setToken(null);
           console.error(e);
           push("/");
         }

@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import { FaPlay, FaPause /* FaForward, FaBackward */ } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from "react";
-import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
 import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";

@@ -96,10 +96,10 @@ const Landing: React.FC = () => {
         const authState = v4()
           .split("-")
           .pop() as string;
+        const redirect_base = window.location.href.split("?")[0];
+        console.log(redirect_base);
         const spotifyResp = await fetch(
-          `/api/spotify-login?state=${authState}&code_challenge=${codeChallenge}&redirect_base=${
-            window.location.href.split("?")[0]
-          }`
+          `/api/spotify-login?state=${authState}&code_challenge=${codeChallenge}&redirect_base=${redirect_base}`
         );
 
         const link = await spotifyResp.text();

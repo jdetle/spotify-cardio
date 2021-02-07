@@ -2,7 +2,7 @@ import { NowRequest, NowResponse } from "@vercel/node";
 
 const getToken = async (req: NowRequest) => {
   const code = req.query.code as string;
-  const redirect_base = req.query.redirect_base as string;
+  const redirect_uri = req.query.redirect_uri as string;
   const code_verifier = req.query.code_verifier as string;
 
   const getParams = async () => {
@@ -10,7 +10,9 @@ const getToken = async (req: NowRequest) => {
     if (!client_id) {
       throw new Error("No client id");
     }
-    const redirect_uri = `${redirect_base}`;
+    if (!redirect_uri) {
+      throw new Error("No redirect");
+    }
     return new URLSearchParams(
       Object.entries({
         client_id,
@@ -39,7 +41,11 @@ const getToken = async (req: NowRequest) => {
 };
 
 export default (request: NowRequest, res: NowResponse) => {
-  if (request.query.code == null || request.query.code_verifier == null) {
+  if (
+    request.query.code == null ||
+    request.query.code_verifier == null ||
+    request.query.redirect_uri == null
+  ) {
     res.send(new Error("Bad params"));
   }
   getToken(request)

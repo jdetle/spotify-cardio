@@ -26,16 +26,6 @@
 
 import "@testing-library/cypress/add-commands";
 
-const scopes = [
-  "user-read-playback-state",
-  "user-modify-playback-state",
-  "streaming",
-  "user-read-email",
-  "playlist-modify-public",
-  "user-top-read",
-  "user-read-playback-position",
-];
-
 const getToken = () => {
   const id = Cypress.env("SPOTIFY_CLIENT_ID");
   const secret = Cypress.env("SPOTIFY_CLIENT_SECRET");
