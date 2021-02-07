@@ -8,12 +8,11 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { useDebounce } from "use-debounce";
-import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
-import Components from "./../components";
-
-import { useRouter } from "next/router";
 import styled from "styled-components";
+import { useDebounce } from "use-debounce";
+
+import { AuthContext, TokenTypes } from "./_app";
+import Components from "./../components";
 
 import {
   SearchContainer,
