@@ -1,5 +1,11 @@
 import styled from "styled-components";
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { PlayerContext } from "contexts/web-playback";
 import { /*pause, togglePlay, */ getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
@@ -29,12 +35,25 @@ const VolumeIcon: React.FC = ({}) => {
   );
 };
 
-const SliderContainer = styled.div``;
+const VolumeSliderContainer = styled.div`
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  grid-template-rows: 1fr;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  align-content: center;
+`;
+
 const VolumeSlider: React.FC = ({}) => {
+  const defaultVolume = 5;
+  const [volume, setVolume] = useState<number>(defaultVolume);
   return (
-    <SliderContainer>
+    <VolumeSliderContainer>
       <VolumeIcon />
-    </SliderContainer>
+      <ProgressBar progress={volume * 10} setProgress={setVolume} />
+    </VolumeSliderContainer>
   );
 };
 
@@ -60,16 +79,122 @@ const PlaybarBGContainer = styled.div`
   grid-template-columns: 4rem 1fr 1fr;
 `;
 */
+
+const SliderButton = styled.button`
+  position: absolute;
+  top: -100%;
+  left: var(--progress-bar-transform);
+  background-color: #fff;
+  border: 0;
+  padding: 0;
+  border-radius: 60%;
+  margin-left: -12px;
+  width: 12px;
+  height: 12px;
+  z-index: 100;
+  -webkit-box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
+  opacity: 0;
+  &:active,
+  &:hover {
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+  }
+  &:after {
+    margin: -2px;
+  }
+`;
+const Slider: React.FC = () => {
+  return <SliderButton onClick={(e) => console.log(e)} />;
+};
+
+const StyledProgressBar = styled.div<{ transform: number }>`
+  height: 100%;
+  width: 100%;
+  display: grid;
+  align-items: center;
+  --bg-color: #535353;
+  --fg-color: #b3b3b3;
+  --is-active-fg-color: #1db954;
+  --progress-bar-height: 4px;
+  --progress-bar-radius: calc(var(--progress-bar-height) / 2);
+  --progress-bar-transform: 0;
+  --progress-bar-transform: ${(p) => `${p.transform}%`};
+  --progress-bar-transform-neg: ${(p) => `${-1 * p.transform}%`};
+`;
+
+const ProgressBarWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  border-radius: var(--progress-bar-radius);
+  height: var(--progress-bar-height);
+`;
+
+const ProgressBarFGWrapper = styled.div`
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  border-radius: var(--progress-bar-radius);
+  height: var(--progress-bar-height);
+  width: 100%;
+`;
+const ProgressBarFG = styled.div`
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  transform: translateX(var(--progress-bar-transform-neg));
+  background-color: var(--fg-color);
+  border-radius: var(--progress-bar-radius);
+  height: var(--progress-bar-height);
+  width: 100%;
+  &:active,
+  &:focus {
+    background-color: ${(p) => p.theme.colors.green1};
+  }
+`;
+
+const ProgressBarBG = styled.div`
+  box-sizing: border-box;
+  display: flex;
+  border-radius: var(--progress-bar-radius);
+  background-color: ${(p) => p.theme.colors.gray3};
+  width: 100%;
+  height: var(--progress-bar-height);
+`;
+const ProgressBar: React.FC<{
+  progress: number;
+  setProgress: Dispatch<SetStateAction<number>>;
+}> = ({ progress }) => {
+  return (
+    <ProgressBarWrapper>
+      <StyledProgressBar
+        // @ts-ignore
+        onClick={(e) => console.log(e, e.target.getBoundingClientRect())}
+        transform={100 - progress}
+      >
+        <ProgressBarBG>
+          <ProgressBarFGWrapper>
+            <ProgressBarFG />
+          </ProgressBarFGWrapper>
+          <Slider />
+        </ProgressBarBG>
+      </StyledProgressBar>
+    </ProgressBarWrapper>
+  );
+};
 const PlaybarContainer = styled.div`
   display: grid;
   border-radius: 0.3rem;
   width: 100%;
   display: grid;
+  padding-right: 1rem;
   grid-template-columns: 1rem 1fr 10rem 1rem;
   grid-template-rows: 1rem 1fr 3rem;
-  ${SliderContainer} {
-    grid-area: 2 / 3 / 2 / 3;
-    border-radius: 1rem;
+  ${VolumeSliderContainer} {
+    grid-area: 1 / 3 / end3 / end3;
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -118,7 +243,6 @@ const Playbar: React.FC = ({}) => {
           playerInstance,
           token: token as SpotifyTokenType,
         });
-        console.log(playerState);
         setPlayerState(playerState);
       }
     }, 2000);
