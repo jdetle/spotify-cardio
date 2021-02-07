@@ -24,8 +24,6 @@ import TrackListItem from "components/smart/track-list-item";
 import TrackSearchList from "components/smart/track-search-list";
 const { Label, Input, Playbar, PlaylistView } = Components;
 
-const API_BASE_URL = "https://api.spotify.com/v1";
-
 type FetchType<DataType> = (
   token: TokenTypes | null
 ) => Promise<{ data: DataType | null; error: Error | null }>;
@@ -237,31 +235,6 @@ const SearchUI: React.FC<{
 
 export const PlaylistCreator = () => {
   const [query, setQuery] = useState<string>("");
-  const { token } = useContext(AuthContext);
-  const { push } = useRouter();
-  const authToken = token as SpotifyTokenType;
-
-  useEffect(() => {
-    const getUser = async () => {
-      if (authToken?.access_token) {
-        try {
-          const headers = new Headers();
-          headers.set("Authorization", `Bearer ${authToken.access_token}`);
-          const resp = await fetch(`${API_BASE_URL}/me`, {
-            headers,
-          });
-          const user = await resp.json();
-          if (user == null) push("/");
-          console.log(user);
-        } catch (e) {
-          console.error(e);
-          push("/");
-        }
-      }
-    };
-    getUser();
-  }, [token]);
-
   return (
     <Layout>
       <nav></nav>
