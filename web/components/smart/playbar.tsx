@@ -1,36 +1,79 @@
 import styled from "styled-components";
-import { FaPlay, FaPause /* FaForward, FaBackward */ } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from "react";
-import RadioGroup, { StyledFieldSet } from "./../radio-group";
-import RadioButton from "./../radio-button";
 import { PlayerContext } from "contexts/web-playback";
-import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
+import { /*pause, togglePlay, */ getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
-// import { AuthContext } from "pages/_app";
 
+const IconButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: #b3b3b3;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  &:before {
+    font-family: glue1-spoticon;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: inherit;
+    vertical-align: bottom;
+    display: inline-block;
+    text-decoration: inherit;
+  }
+`;
+const VolumeIcon: React.FC = ({}) => {
+  return (
+    <IconButton className="spoticon-volume-off-16 control-button volume-bar__icon" />
+  );
+};
+
+const SliderContainer = styled.div``;
+const VolumeSlider: React.FC = ({}) => {
+  return (
+    <SliderContainer>
+      <VolumeIcon />
+    </SliderContainer>
+  );
+};
+
+const Footer = styled.footer`
+  height: 100%;
+  width: 100%;
+  grid-area: 3 / 1 / 2 / 3;
+  background: linear-gradient(
+    -90deg,
+    ${(props) => props.theme.colors.gray1} 0%,
+    ${(props) => props.theme.colors.gray2} 100%
+  );
+`;
+/*
+const PlayDetailsContainer = styled.div`
+  grid-area: 3/ 2 /4 / 3;
+`;
+*/
+/*
 const PlaybarBGContainer = styled.div`
-  grid-area: 4 / 1 / 5 / 5;
   display: grid;
   grid-template-rows: 2rem 1fr 2rem;
   grid-template-columns: 4rem 1fr 1fr;
 `;
-
+*/
 const PlaybarContainer = styled.div`
-  grid-area: 2 / 2 /3 / 3;
+  display: grid;
   border-radius: 0.3rem;
   width: 100%;
   display: grid;
-  grid-template-columns: 1rem 1fr 1rem;
-  grid-template-rows: 1rem 1fr 1rem;
-  ${StyledFieldSet} {
-    grid-area: 2 / 2 / 3 / 3;
+  grid-template-columns: 1rem 1fr 10rem 1rem;
+  grid-template-rows: 1rem 1fr 3rem;
+  ${SliderContainer} {
+    grid-area: 2 / 3 / 2 / 3;
     border-radius: 1rem;
   }
 `;
 
-const PlayDetailsContainer = styled.div`
-  grid-area: 3/ 2 /4 / 3;
-`;
+/*
 
 type PlayDetailsProps = Pick<
   PlayerState,
@@ -38,6 +81,8 @@ type PlayDetailsProps = Pick<
 > & {
   name: string;
 };
+*/
+/*
 const PlayDetails: React.FC<PlayDetailsProps> = ({
   name,
   duration,
@@ -51,13 +96,14 @@ const PlayDetails: React.FC<PlayDetailsProps> = ({
     </PlayDetailsContainer>
   );
 };
+*/
 
 const Playbar: React.FC = ({}) => {
   // const { setToken } = useContext(AuthContext);
-  const [value, setValue] = useState<string>("pause");
+  const [, setValue] = useState<string>("pause");
   const { playerInstance } = useContext(PlayerContext);
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const { token, setToken } = useContext(AuthContext);
+  const { token /*setToken*/ } = useContext(AuthContext);
   useEffect(() => {
     if (playerState?.is_playing) {
       setValue("play");
@@ -66,7 +112,6 @@ const Playbar: React.FC = ({}) => {
 
   useEffect(() => {
     let isSubscribed = true;
-    console.log(isSubscribed);
     const timerID = setInterval(async () => {
       if (playerInstance && isSubscribed && token) {
         const playerState = await getPlayerState({
@@ -83,20 +128,9 @@ const Playbar: React.FC = ({}) => {
     };
   }, [playerInstance, token]);
   return (
-    <PlaybarBGContainer>
+    <Footer>
       <PlaybarContainer>
-        <RadioGroup legend="Web Playback">
-          {/*
-          <RadioButton
-            disabled={playerState === null}
-            isActive={playerState != null && value === "back"}
-            onSelect={() => {
-              setValue("back");
-            }}
-          >
-            <FaBackward />
-          </RadioButton>
-          */}
+        {/* <RadioGroup legend="Web Playback">
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
@@ -128,30 +162,21 @@ const Playbar: React.FC = ({}) => {
           >
             <FaPause />
           </RadioButton>
-          {/*
-          <RadioButton
-            disabled={playerState === null}
-            isActive={playerState != null && value === "forward"}
-            onSelect={() => {
-              setValue("forward");
-            }}
-          >
-            <FaForward />
-          </RadioButton>
-          */}
+
           {playerState ? (
             <PlayDetails
               timestamp={playerState.timestamp}
               position={playerState.position}
-              name={playerState?.track_window?.current_track.name ?? "lol"}
+              name={playerState?.track_window?.current_track.name ?? ""}
               duration={playerState.duration}
             ></PlayDetails>
           ) : (
             <></>
           )}
-        </RadioGroup>
+        </RadioGroup> */}
+        <VolumeSlider />
       </PlaybarContainer>
-    </PlaybarBGContainer>
+    </Footer>
   );
 };
 

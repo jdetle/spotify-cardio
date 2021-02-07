@@ -66,8 +66,16 @@ const FIGMA_PALETTE = {
 const AuthProvider: React.FC = ({ children }) => {
   const [authState, setAuthState] = useState<string>("");
   const [verifier, setVerifier] = useState<string>("");
-  const [token, setToken] = useState<SpotifyTokenType | null>(null);
-
+  const [token, setToken] = useState<TokenTypes | null>(null);
+  const setTokenWithLS = (token: TokenTypes) => {
+    console.log(token);
+    localStorage?.setItem("spotify-auth-state", "");
+    localStorage?.setItem("spotify-verifier", "");
+    setAuthState("");
+    setVerifier("");
+    setToken(token);
+    localStorage?.setItem("spotify-token", JSON.stringify(token));
+  };
   useEffect(() => {
     if (verifier == "" && localStorage) {
       setVerifier(localStorage?.getItem("spotify-verifier") ?? "");
@@ -90,6 +98,12 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (token && ((token as unknown) as SpotifyErrorTokenType)?.error) {
+      console.error(token);
+      setTokenWithLS(null);
+    }
+  }, [token]);
   return (
     <AuthContext.Provider
       value={{
@@ -104,14 +118,7 @@ const AuthProvider: React.FC = ({ children }) => {
         },
         verifier,
         token,
-        setToken: (token: SpotifyTokenType) => {
-          localStorage?.setItem("spotify-auth-state", "");
-          localStorage?.setItem("spotify-verifier", "");
-          setAuthState("");
-          setVerifier("");
-          setToken(token);
-          localStorage?.setItem("spotify-token", JSON.stringify(token));
-        },
+        setToken: setTokenWithLS,
       }}
     >
       {children}

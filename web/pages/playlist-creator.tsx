@@ -1,4 +1,6 @@
 import React, {
+  Dispatch,
+  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -6,20 +8,21 @@ import React, {
   useReducer,
   useState,
 } from "react";
+import { useDebounce } from "use-debounce";
 import { AuthContext, SpotifyTokenType, TokenTypes } from "./_app";
 import Components from "./../components";
+
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
-const {
-  Label,
-  Form,
-  TrackSearchList,
-  TrackListItem,
-  Input,
-  Playbar,
-  PlaylistView,
-} = Components;
+import {
+  SearchContainer,
+  DataContainer,
+  SearchResultsContainer,
+} from "./../components/layout";
+import TrackListItem from "components/smart/track-list-item";
+import TrackSearchList from "components/smart/track-search-list";
+const { Label, Input, Playbar, PlaylistView } = Components;
 
 const API_BASE_URL = "https://api.spotify.com/v1";
 
@@ -94,15 +97,14 @@ export function useTableState<DataType>(
   return useMemo(() => tableState, [tableState]);
 }
 
+const LoadingShimmer = styled.div``;
 const SearchInputContainer = styled.div`
-  height: 4rem;
   width: 100%;
   padding: 0.5rem;
-  background-color: ${(p) => p.theme.colors.gray2};
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-area: 1 / 1 / 2 / 5;
+  grid-area: 1 / 1 / 2 / 3;
   label {
     font-weight: 500;
     margin: 0px 10px 0px 10px;
@@ -112,23 +114,65 @@ const SearchInputContainer = styled.div`
   }
 `;
 
-const SearchAndAddToPlaylistSection = styled.section`
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1rem repeat(2, 1fr) 1rem;
-  grid-template-rows: 5rem repeat(3, 1fr);
-  grid-column-gap: 20px;
-  grid-row-gap: 10px;
+const Main = styled.main`
+  background-color: ${(p) => p.theme.colors.gray1};
 `;
 
-const SearchUI: React.FC = ({}) => {
-  const { token } = useContext(AuthContext);
-  const [query, setQuery] = useState<string>("");
-  const [submitCount, setSubmitCount] = useState<number>(0);
+const Layout = styled.div`
+  grid-area: 1 / 1/ 3/ 3;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: 1fr 90px;
+  grid-template-columns: 235px 1fr;
 
+  header {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  nav {
+    background-color: #000;
+    grid-area: 1 / 1 / 2 / 2;
+    font-size: 2rem;
+    font-weight: 500;
+    width: 100%;
+    @media (max-width: 420px) {
+      font-size: 1rem;
+    }
+  }
+  main {
+    grid-area: 1 / 2 / 2 / 2;
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+
+    height: 100%;
+    width: 100%;
+
+    ${SearchContainer} {
+      height: 100%;
+      width: 100%;
+      grid-area: 1 / 1 / 2 / 1;
+    }
+    ${DataContainer} {
+      height: 100%;
+      width: 100%;
+      grid-area: 2 / 1 / 3 / 1;
+    }
+  }
+
+  footer {
+    display: grid;
+  }
+`;
+
+const SearchResults: React.FC<{ query: string }> = ({ query }) => {
+  const { token } = useContext(AuthContext);
+  const [debouncedQuery] = useDebounce(query, 1000);
   const search = useCallback(async () => {
-    if (token == null) return Promise.reject("No token present");
+    console.log(token);
+    if (token == null) {
+      console.error("no token present");
+      return Promise.reject("No token present");
+    }
     if (query == "") return Promise.resolve({ data: [], error: null });
     try {
       const response = await fetch(`/api/search`, {
@@ -140,58 +184,63 @@ const SearchUI: React.FC = ({}) => {
     } catch (e) {
       return e;
     }
-  }, [submitCount, token]);
+  }, [debouncedQuery, token]);
 
   const { loading, data, error } = useTableState<TracksSearchResponseType>(
     search,
     token
   );
-
-  console.log(loading, data, error);
-
+  if (loading) {
+    <SearchResultsContainer>
+      <LoadingShimmer />
+    </SearchResultsContainer>;
+  }
+  if (error) {
+    <SearchResultsContainer>{error.message}</SearchResultsContainer>;
+  }
   return (
-    <>
-      <SearchInputContainer>
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmitCount((c) => ++c);
-          }}
-          id="search"
-          role="search"
-        >
-          <Label htmlFor="search-input">
-            Search Tracks
-            <Input
-              type="search"
-              id="search-input"
-              role="search-input"
-              name="search"
-              spellCheck="false"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-              }}
-            />
-          </Label>
-          <Input value="Submit" type="submit" />
-        </Form>
-      </SearchInputContainer>
-
-      <TrackSearchList data={data} loading={loading} error={error}>
-        {data?.tracks?.items.map((item, i) => {
-          return <TrackListItem {...item} key={i} />;
+    <SearchResultsContainer>
+      <TrackSearchList>
+        {data?.tracks?.items.map((i, index) => {
+          return <TrackListItem key={index} {...i}></TrackListItem>;
         })}
       </TrackSearchList>
-    </>
+    </SearchResultsContainer>
+  );
+};
+
+const SearchUI: React.FC<{
+  query: string;
+  setQuery: Dispatch<SetStateAction<string>>;
+}> = ({ query, setQuery }) => {
+  return (
+    <SearchContainer>
+      <SearchInputContainer>
+        <Label htmlFor="search-input">
+          <Input
+            type="search"
+            id="search-input"
+            role="search-input"
+            name="search"
+            spellCheck="false"
+            placeholder="Search For A Song"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+          />
+        </Label>
+      </SearchInputContainer>
+    </SearchContainer>
   );
 };
 
 export const PlaylistCreator = () => {
-  const { token, setToken } = useContext(AuthContext);
-
+  const [query, setQuery] = useState<string>("");
+  const { token } = useContext(AuthContext);
   const { push } = useRouter();
   const authToken = token as SpotifyTokenType;
+
   useEffect(() => {
     const getUser = async () => {
       if (authToken?.access_token) {
@@ -202,16 +251,9 @@ export const PlaylistCreator = () => {
             headers,
           });
           const user = await resp.json();
-          if (user.error && user.error.status == 401) {
-            const response = await fetch("/api/refresh", {
-              method: "POST",
-              body: JSON.stringify({ refresh_token: authToken.refresh_token }),
-            });
-            const refreshedToken = await response.json();
-            setToken(refreshedToken);
-          }
+          if (user == null) push("/");
+          console.log(user);
         } catch (e) {
-          setToken(null);
           console.error(e);
           push("/");
         }
@@ -221,11 +263,17 @@ export const PlaylistCreator = () => {
   }, [token]);
 
   return (
-    <SearchAndAddToPlaylistSection>
-      <SearchUI />
-      <PlaylistView />
+    <Layout>
+      <nav></nav>
+      <Main>
+        <SearchUI query={query} setQuery={setQuery} />
+        <DataContainer>
+          <SearchResults query={query} />
+          <PlaylistView />
+        </DataContainer>
+      </Main>
       <Playbar />
-    </SearchAndAddToPlaylistSection>
+    </Layout>
   );
 };
 

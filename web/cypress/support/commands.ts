@@ -23,3 +23,31 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+import "@testing-library/cypress/add-commands";
+
+const getToken = () => {
+  const id = Cypress.env("SPOTIFY_CLIENT_ID");
+  const secret = Cypress.env("SPOTIFY_CLIENT_SECRET");
+  if (!id || !secret) throw new Error("env vars misconfigured");
+  if (localStorage.getItem("spotify-token") == null) {
+    const request = {
+      method: "POST",
+      url: "https://accounts.spotify.com/api/token",
+      form: true,
+      body: {
+        grant_type: "client_credentials",
+      },
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${id}:${secret}`).toString(
+          "base64"
+        )}`,
+      },
+    };
+    cy.request(request).then((resp) => {
+      localStorage.setItem("spotify-token", JSON.stringify(resp.body));
+    });
+  }
+};
+
+Cypress.Commands.add("getToken", getToken);

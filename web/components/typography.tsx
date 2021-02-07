@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
 const p = styled.p<{ center?: boolean; xl?: boolean }>`
+  color: ${(p) => p.theme.colors.green3};
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 2rem;
@@ -44,7 +45,6 @@ const span = styled.span`
 `;
 const pre = styled.pre``;
 const h1 = styled.h1<{ width?: string }>`
-  letter-spacing: -0.04em !important;
   margin: 0;
   font-weight: 900;
   line-height: 1;

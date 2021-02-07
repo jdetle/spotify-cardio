@@ -21,10 +21,12 @@ const PlaybackEnabler: React.FC = ({ children }) => {
         const player = new (Spotify as Spotify).Player({
           name: "Spotify Cardio",
           getOAuthToken: async (cb) => {
+            console.log(token);
             if (token == null) {
               const stringifiedToken = localStorage?.getItem("spotify-token");
               if (stringifiedToken && stringifiedToken != "null") {
                 const token = JSON.parse(stringifiedToken);
+                console.log(token);
                 cb(token.access_token, token);
               }
             } else {

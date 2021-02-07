@@ -7,13 +7,8 @@ const StyledApp = styled.div`
   color: ${(props) => {
     return props.theme.colors.green1;
   }};
-  background: ${(props) => props.theme.colors.gray6};
-  background: linear-gradient(
-    176deg,
-    ${(p) => p.theme.colors.purple1} 0%,
-    ${(p) => p.theme.colors.purple2} 35%,
-    ${(p) => p.theme.colors.purple1} 100%
-  );
+  background: ${(props) => props.theme.colors.gray1};
+
   overflow-x: hidden;
   overflow-y: hidden;
   video,
@@ -24,13 +19,12 @@ const StyledApp = styled.div`
   #index_title {
     color: ${(p) => p.theme.colors.green3};
     margin-bottom: 50px;
-    letter-spacing: -0.04rem;
+    letter-spacing: -0.1rem;
     font-size: 104px;
     font-weight: 900;
     text-align: center;
     z-index: 1;
     padding: 0;
-    overflow: hidden;
     @media (max-width: 420px) {
       font-size: 7rem;
       margin-top: 4rem;
@@ -53,13 +47,16 @@ html, body{
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- font-family: Circular, Helvetica, Arial, sans-serif, IosFix;
+  font-family: spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
   overflow: hidden;
   margin: 0;
   height: 100%;
+  background-color: #000;
+  letter-spacing: -0.1em;
 }
 #__next {
   height: 100%;  
+  background-color: #000;
   overflow: hidden;
 }`;
 

@@ -44,48 +44,42 @@ const FIGMA_PALETTE = {
 };
 */
 const TrackSearchContainer = styled.div`
-  grid-area: 2 / 2 / 4 / 3;
+  height: 100%;
   max-height: 600px;
   border-radius: 0.3rem;
+  /*
   background: linear-gradient(
     176deg,
     ${(props) => props.theme.colors.green1} 0%,
     ${(props) => props.theme.colors.purple2} 35%,
     ${(props) => props.theme.colors.blue3} 100%
   );
+  */
   display: grid;
   grid-template-rows: 1rem 6rem 1fr 2rem;
   grid-template-columns: 1rem 1fr 1rem;
   grid-row-gap: 1rem;
   overflow-y: hidden;
   overflow-x: hidden;
-  box-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
   ul {
     grid-area: 3 / 2 / 3 / 2;
     margin: 0;
   }
-  h3 {
+  h6 {
     grid-area: 2 / 2/ 3/ 2;
-    text-align: center;
-    background: linear-gradient(
-      126deg,
-      ${(props) => props.theme.colors.blue3} 10%,
-      ${(props) => props.theme.colors.gray6} 33%,
-      ${(props) => props.theme.colors.blue3} 73%
-    );
+    background-color: #FFF;
+    font-weight: 100;
+    font-size: 1.5rem;
+    text-align: right;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 `;
-export const TrackSearchList: React.FC<{
-  data: TracksSearchResponseType | null;
-  error: Error | null;
-  loading: boolean;
-}> = ({ children }) => {
+export const TrackSearchList: React.FC = ({ children }) => {
   return (
     <TrackSearchContainer>
-      <T.h3>Results</T.h3>
+      <T.h6>Results</T.h6>
       <UL>{children}</UL>
     </TrackSearchContainer>
   );
