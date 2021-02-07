@@ -25,7 +25,7 @@ function base64urlencode(a) {
 const Layout = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 80px 1fr 50px;
+  grid-template-rows: 80px 1fr 100px;
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   height: 100%;
@@ -70,6 +70,7 @@ const Layout = styled.div`
   }
 
   footer {
+    text-align: center;
     grid-area: 4/ 1 / 4 / 2;
   }
 `;
@@ -82,7 +83,7 @@ const Main = styled.main`
   grid-template-rows: 10rem 1fr 10rem;
 `;
 const Landing: React.FC = () => {
-  const Title = "Spotify Cardio";
+  const Title = "Cardio Playlists For Spotify";
   const [loginLink, setLoginLink] = useState<string>("");
   const { token, setAuthState, setVerifier } = useContext(AuthContext);
   useEffect(() => {
@@ -141,7 +142,9 @@ const Landing: React.FC = () => {
         </Container>
       </Main>
       <Footer role="contentinfo">
-        {`All rights reserved: John Detlefs ${new Date().getFullYear()}`}
+        {`This app has no endorsment from Spotify. This is a demo project meant to display some use of Web APIs while providing a potentially useful Spotify feature to any users passing through.`}
+        <br />
+        {`John Detlefs ${new Date().getFullYear()}  jdetle@gmail.com`}
       </Footer>
     </Layout>
   );

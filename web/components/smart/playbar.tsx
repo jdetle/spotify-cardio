@@ -7,33 +7,50 @@ import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
 // import { AuthContext } from "pages/_app";
 
-type RadioGroupProps = {
-  legend: string;
-};
-
-const StyledFieldSet = styled.fieldset`
-  legend {
+const IconButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: #b3b3b3;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  &:before {
+    font-family: glue1-spoticon;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: inherit;
+    vertical-align: bottom;
+    display: inline-block;
+    text-decoration: inherit;
   }
 `;
+const VolumeIcon: React.FC = ({}) => {
+  return (
+    <IconButton className="spoticon-volume-off-16 control-button volume-bar__icon" />
+  );
+};
+
+const SliderContainer = styled.div``;
+const VolumeSlider: React.FC = ({}) => {
+  return (
+    <SliderContainer>
+      <VolumeIcon />
+    </SliderContainer>
+  );
+};
 
 const Footer = styled.footer`
   height: 100%;
   width: 100%;
   grid-area: 3 / 1 / 2 / 3;
   background: linear-gradient(
-    20deg,
+    -90deg,
     ${(props) => props.theme.colors.gray1} 0%,
     ${(props) => props.theme.colors.gray2} 100%
   );
 `;
-const RadioGroup: React.FC<RadioGroupProps> = ({ children, legend }) => {
-  return (
-    <StyledFieldSet>
-      <legend>{legend}</legend>
-      {children}
-    </StyledFieldSet>
-  );
-};
 
 const PlayDetailsContainer = styled.div`
   grid-area: 3/ 2 /4 / 3;
@@ -52,7 +69,7 @@ const PlaybarContainer = styled.div`
   display: grid;
   grid-template-columns: 1rem 1fr 10rem 1rem;
   grid-template-rows: 1rem 1fr 3rem;
-  ${StyledFieldSet} {
+  ${SliderContainer} {
     grid-area: 2 / 3 / 2 / 3;
     border-radius: 1rem;
   }
@@ -111,7 +128,7 @@ const Playbar: React.FC = ({}) => {
   return (
     <Footer>
       <PlaybarContainer>
-        <RadioGroup legend="Web Playback">
+        {/* <RadioGroup legend="Web Playback">
           <RadioButton
             disabled={playerState === null}
             isActive={playerState != null && value === "play"}
@@ -154,7 +171,8 @@ const Playbar: React.FC = ({}) => {
           ) : (
             <></>
           )}
-        </RadioGroup>
+        </RadioGroup> */}
+        <VolumeSlider />
       </PlaybarContainer>
     </Footer>
   );

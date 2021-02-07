@@ -47,7 +47,7 @@ html, body{
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- font-family: Circular, Helvetica, Arial, sans-serif, IosFix;
+  font-family: spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
   overflow: hidden;
   margin: 0;
   height: 100%;

@@ -18,7 +18,7 @@ export const SearchContainer = styled.section`
     margin: 0px 10px 0px 10px;
   }
   input {
-    letter-spacing: -0.1em;
+    letter-spacing: -0.05em;
     height: 5rem;
     border-radius: 0.25rem;
     font-size: 3rem;
@@ -95,7 +95,10 @@ const Layout = styled.div`
 `;
 */
 
-const LayoutWithChildren = ({ children, title = "SpotifyCardio" }) => {
+const LayoutWithChildren = ({
+  children,
+  title = "Cardio Playlists for Spotify",
+}) => {
   return (
     <>
       <Head>

@@ -36,6 +36,34 @@ export default class MyDocument extends Document<{ styleTags: Object }> {
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta charSet="utf-8" />
           <link rel="icon" type="image/x-icon" href="./static/favicon.ico" />
+          <link
+            rel="stylesheet"
+            href="https://open.scdn.co/cdn/build/web-player/web-player.d1458de0.css"
+          ></link>
+          <link
+            rel="preload"
+            href="https://open.scdn.co/cdn/fonts/CircularSpUIv3T-Book.3466e0ec.woff2"
+            as="font"
+            type="font/woff2"
+          ></link>
+          <link
+            rel="preload"
+            href="https://open.scdn.co/cdn/fonts/CircularSpUIv3T-Bold.8d0a45cc.woff2"
+            as="font"
+            type="font/woff2"
+          ></link>
+          <link
+            rel="preload"
+            href="https://open.scdn.co/cdn/fonts/spoticon_regular_2.d319d911.woff2"
+            as="font"
+            type="font/woff2"
+          ></link>
+          <link
+            rel="preload"
+            href="https://open.scdn.co/cdn/fonts/spoticon_regular_2.d319d911.woff2"
+            as="font"
+            type="font/woff2"
+          ></link>
           <meta
             name="Description"
             content="An app to help create spotify playlists"
