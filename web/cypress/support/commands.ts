@@ -26,10 +26,19 @@
 
 import "@testing-library/cypress/add-commands";
 
+const scopes = [
+  "user-read-playback-state",
+  "user-modify-playback-state",
+  "streaming",
+  "user-read-email",
+  "playlist-modify-public",
+  "user-top-read",
+  "user-read-playback-position",
+];
+
 const getToken = () => {
   const id = Cypress.env("SPOTIFY_CLIENT_ID");
   const secret = Cypress.env("SPOTIFY_CLIENT_SECRET");
-  console.log("id", id, secret);
   if (!id || !secret) throw new Error("env vars misconfigured");
   if (localStorage.getItem("spotify-token") == null) {
     const request = {
@@ -48,8 +57,6 @@ const getToken = () => {
     cy.request(request).then((resp) => {
       localStorage.setItem("spotify-token", JSON.stringify(resp.body));
     });
-
-    cy.visit(Cypress.env("host"));
   }
 };
 

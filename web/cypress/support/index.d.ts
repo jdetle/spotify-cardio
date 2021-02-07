@@ -6,6 +6,6 @@ declare namespace Cypress {
      * Command to set a token in local storage if it doesnt exist
      * @example cy.getToken()
      */
-    getToken(): void;
+    getToken(): Promise<void>;
   }
 }

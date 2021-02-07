@@ -256,6 +256,7 @@ export const PlaylistCreator = () => {
             setToken(refreshedToken);
           }
         } catch (e) {
+          console.log(e);
           setToken(null);
           console.error(e);
           push("/");
