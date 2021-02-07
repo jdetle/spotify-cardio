@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import React, { useContext, useEffect, useState } from "react";
 import { PlayerContext } from "contexts/web-playback";
-import { pause, togglePlay, getPlayerState } from "./playback-api-calls";
+import { /*pause, togglePlay, */ getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
-// import { AuthContext } from "pages/_app";
 
 const IconButton = styled.button`
   background-color: transparent;
@@ -49,10 +48,11 @@ const Footer = styled.footer`
     ${(props) => props.theme.colors.gray2} 100%
   );
 `;
-
+/*
 const PlayDetailsContainer = styled.div`
   grid-area: 3/ 2 /4 / 3;
 `;
+*/
 /*
 const PlaybarBGContainer = styled.div`
   display: grid;
@@ -73,12 +73,16 @@ const PlaybarContainer = styled.div`
   }
 `;
 
+/*
+
 type PlayDetailsProps = Pick<
   PlayerState,
   "duration" | "position" | "timestamp"
 > & {
   name: string;
 };
+*/
+/*
 const PlayDetails: React.FC<PlayDetailsProps> = ({
   name,
   duration,
@@ -92,13 +96,14 @@ const PlayDetails: React.FC<PlayDetailsProps> = ({
     </PlayDetailsContainer>
   );
 };
+*/
 
 const Playbar: React.FC = ({}) => {
   // const { setToken } = useContext(AuthContext);
-  const [value, setValue] = useState<string>("pause");
+  const [, setValue] = useState<string>("pause");
   const { playerInstance } = useContext(PlayerContext);
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const { token, setToken } = useContext(AuthContext);
+  const { token /*setToken*/ } = useContext(AuthContext);
   useEffect(() => {
     if (playerState?.is_playing) {
       setValue("play");
@@ -107,7 +112,6 @@ const Playbar: React.FC = ({}) => {
 
   useEffect(() => {
     let isSubscribed = true;
-    console.log(isSubscribed);
     const timerID = setInterval(async () => {
       if (playerInstance && isSubscribed && token) {
         const playerState = await getPlayerState({
