@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import React, {
   Dispatch,
   SetStateAction,
@@ -47,12 +47,12 @@ const VolumeSliderContainer = styled.div`
 `;
 
 const VolumeSlider: React.FC = ({}) => {
-  const defaultVolume = 5;
+  const defaultVolume = 50;
   const [volume, setVolume] = useState<number>(defaultVolume);
   return (
     <VolumeSliderContainer>
       <VolumeIcon />
-      <ProgressBar progress={volume * 10} setProgress={setVolume} />
+      <ProgressBar progress={volume} setProgress={setVolume} />
     </VolumeSliderContainer>
   );
 };
@@ -80,10 +80,10 @@ const PlaybarBGContainer = styled.div`
 `;
 */
 
-const SliderButton = styled.button`
+const Slider = styled.button<{ active: boolean }>`
   position: absolute;
   top: -100%;
-  left: var(--progress-bar-transform);
+  right: var(--progress-bar-transform);
   background-color: #fff;
   border: 0;
   padding: 0;
@@ -95,6 +95,13 @@ const SliderButton = styled.button`
   -webkit-box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
   opacity: 0;
+  ${(p) =>
+    p.active &&
+    css`
+      width: 12px;
+      height: 12px;
+      opacity: 1;
+    `}
   &:active,
   &:hover {
     width: 12px;
@@ -105,18 +112,14 @@ const SliderButton = styled.button`
     margin: -2px;
   }
 `;
-const Slider: React.FC = () => {
-  return <SliderButton onClick={(e) => console.log(e)} />;
-};
 
-const StyledProgressBar = styled.div<{ transform: number }>`
+const StyledProgressBar = styled.div<{ active: boolean; transform: number }>`
   height: 100%;
   width: 100%;
   display: grid;
   align-items: center;
   --bg-color: #535353;
   --fg-color: #b3b3b3;
-  --is-active-fg-color: #1db954;
   --progress-bar-height: 4px;
   --progress-bar-radius: calc(var(--progress-bar-height) / 2);
   --progress-bar-transform: 0;
@@ -140,7 +143,7 @@ const ProgressBarFGWrapper = styled.div`
   height: var(--progress-bar-height);
   width: 100%;
 `;
-const ProgressBarFG = styled.div`
+const ProgressBarFG = styled.div<{ active: boolean }>`
   -webkit-transform: translateX(-100%);
   transform: translateX(-100%);
   transform: translateX(var(--progress-bar-transform-neg));
@@ -148,12 +151,16 @@ const ProgressBarFG = styled.div`
   border-radius: var(--progress-bar-radius);
   height: var(--progress-bar-height);
   width: 100%;
+  ${(p) =>
+    p.active &&
+    css`
+      background-color: ${(p) => p.theme.colors.green1};
+    `}
   &:active,
   &:focus {
     background-color: ${(p) => p.theme.colors.green1};
   }
 `;
-
 const ProgressBarBG = styled.div`
   box-sizing: border-box;
   display: flex;
@@ -165,19 +172,67 @@ const ProgressBarBG = styled.div`
 const ProgressBar: React.FC<{
   progress: number;
   setProgress: Dispatch<SetStateAction<number>>;
-}> = ({ progress }) => {
+}> = ({ setProgress, progress }) => {
+  const handleProgressClick = (e: unknown) => {
+    // @ts-ignore
+    const pageX = e.pageX;
+    // @ts-ignore
+    const bcr = e.currentTarget.getBoundingClientRect();
+    // left is zero
+    const zeroed = pageX - bcr.x;
+    const prog = (zeroed / bcr.width) * 100;
+    console.log(pageX, zeroed, prog, bcr, moving);
+    // const newPos = Math.min(Math.max(0, progress + delta), 100);
+    setProgress(prog);
+  };
+  const [active, setActive] = useState<boolean>(false);
+  const [moving, setMoving] = useState<boolean>(false);
   return (
-    <ProgressBarWrapper>
+    <ProgressBarWrapper
+      onBlur={(e) => {
+        setMoving(false);
+        setActive(false);
+      }}
+      onFocus={(e) => {
+        setMoving(false);
+        setActive(false);
+      }}
+      onMouseUp={() => {
+        setMoving(false);
+      }}
+      onMouseDown={() => {
+        setMoving(true);
+      }}
+      onMouseOver={(e) => {
+        setActive(true);
+      }}
+    >
       <StyledProgressBar
         // @ts-ignore
-        onClick={(e) => console.log(e, e.target.getBoundingClientRect())}
+        active={active}
+        onClick={handleProgressClick}
+        onMouseMove={(e) => {
+          if (moving) {
+            handleProgressClick(e);
+          }
+        }}
         transform={100 - progress}
       >
         <ProgressBarBG>
-          <ProgressBarFGWrapper>
-            <ProgressBarFG />
+          <ProgressBarFGWrapper
+            onMouseMove={(e) => {
+              if (moving) {
+                handleProgressClick(e);
+              }
+            }}
+            //onMouseMove={(e) => e.stopPropagation()}
+          >
+            <ProgressBarFG
+              // onMouseMove={(e) => e.stopPropagation()}
+              active={active}
+            />
           </ProgressBarFGWrapper>
-          <Slider />
+          <Slider onMouseMove={(e) => e.stopPropagation()} active={active} />
         </ProgressBarBG>
       </StyledProgressBar>
     </ProgressBarWrapper>

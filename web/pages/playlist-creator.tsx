@@ -165,7 +165,6 @@ const SearchResults: React.FC<{ query: string }> = ({ query }) => {
   const { token } = useContext(AuthContext);
   const [debouncedQuery] = useDebounce(query, 1000);
   const search = useCallback(async () => {
-    console.log(token);
     if (token == null) {
       console.error("no token present");
       return Promise.reject("No token present");
