@@ -9,6 +9,7 @@ import React, {
 import { PlayerContext } from "contexts/web-playback";
 import { /*pause, togglePlay, */ getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
+import _ from "lodash";
 
 const IconButton = styled.button`
   background-color: transparent;
@@ -173,29 +174,46 @@ const ProgressBar: React.FC<{
   progress: number;
   setProgress: Dispatch<SetStateAction<number>>;
 }> = ({ setProgress, progress }) => {
-  const handleProgressClick = (e: unknown) => {
-    // @ts-ignore
-    const pageX = e.pageX;
-    // @ts-ignore
-    const bcr = e.currentTarget.getBoundingClientRect();
-    // left is zero
-    const zeroed = pageX - bcr.x;
-    const prog = (zeroed / bcr.width) * 100;
-    console.log(pageX, zeroed, prog, bcr, moving);
-    // const newPos = Math.min(Math.max(0, progress + delta), 100);
-    setProgress(prog);
+  const handleProgressClick = (
+    data:
+      | {
+          pageX: number;
+          bcr: { x: number; y: number; width: number };
+        }
+      | undefined
+  ) => {
+    if (data?.bcr && data?.pageX) {
+      console.log(data);
+      const { pageX, bcr } = data;
+      const zeroed = pageX - bcr.x;
+      const prog = (zeroed / bcr.width) * 100;
+      console.log(pageX, zeroed, prog, bcr, moving);
+      // const newPos = Math.min(Math.max(0, progress + delta), 100);
+      if (moving) {
+        setProgress(prog);
+      }
+    }
   };
+  const onMouseMove = React.useMemo(() => {
+    const throttled = _.throttle((e) => {
+      return { pageX: e.pageX, bcr: e.target.getBoundingClientRect() };
+    }, 100);
+    return (e) => {
+      e.persist();
+      return throttled(e);
+    };
+  }, []);
   const [active, setActive] = useState<boolean>(false);
   const [moving, setMoving] = useState<boolean>(false);
   return (
     <ProgressBarWrapper
       onBlur={(e) => {
         setMoving(false);
-        setActive(false);
+        //setActive(false);
       }}
       onFocus={(e) => {
-        setMoving(false);
-        setActive(false);
+        setMoving(true);
+        setActive(true);
       }}
       onMouseUp={() => {
         setMoving(false);
@@ -203,6 +221,8 @@ const ProgressBar: React.FC<{
       onMouseDown={() => {
         setMoving(true);
       }}
+      onTouchStart={(e) => console.log(e)}
+      onTouchMove={(e) => console.log(e)}
       onMouseOver={(e) => {
         setActive(true);
       }}
@@ -210,20 +230,18 @@ const ProgressBar: React.FC<{
       <StyledProgressBar
         // @ts-ignore
         active={active}
-        onClick={handleProgressClick}
+        onClick={(e) => {
+          handleProgressClick(onMouseMove(e));
+        }}
         onMouseMove={(e) => {
-          if (moving) {
-            handleProgressClick(e);
-          }
+          handleProgressClick(onMouseMove(e));
         }}
         transform={100 - progress}
       >
         <ProgressBarBG>
           <ProgressBarFGWrapper
             onMouseMove={(e) => {
-              if (moving) {
-                handleProgressClick(e);
-              }
+              handleProgressClick(onMouseMove(e));
             }}
             //onMouseMove={(e) => e.stopPropagation()}
           >
