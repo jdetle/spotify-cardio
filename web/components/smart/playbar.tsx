@@ -1,15 +1,11 @@
-import styled, { css } from "styled-components";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import styled from "styled-components";
+import React, { useContext, useEffect, useState } from "react";
+
 import { PlayerContext } from "contexts/web-playback";
 import { /*pause, togglePlay, */ getPlayerState } from "./playback-api-calls";
 import { AuthContext, SpotifyTokenType } from "pages/_app";
 import _ from "lodash";
+import ProgressBar from "components/progress-bar";
 
 const IconButton = styled.button`
   background-color: transparent;
@@ -30,6 +26,7 @@ const IconButton = styled.button`
     text-decoration: inherit;
   }
 `;
+
 const VolumeIcon: React.FC = ({}) => {
   return (
     <IconButton className="spoticon-volume-off-16 control-button volume-bar__icon" />
@@ -81,181 +78,6 @@ const PlaybarBGContainer = styled.div`
 `;
 */
 
-const Slider = styled.button<{ active: boolean }>`
-  position: absolute;
-  top: -100%;
-  right: var(--progress-bar-transform);
-  background-color: #fff;
-  border: 0;
-  padding: 0;
-  border-radius: 60%;
-  margin-left: -12px;
-  width: 12px;
-  height: 12px;
-  z-index: 100;
-  -webkit-box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
-  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
-  opacity: 0;
-  ${(p) =>
-    p.active &&
-    css`
-      width: 12px;
-      height: 12px;
-      opacity: 1;
-    `}
-  &:active,
-  &:hover {
-    width: 12px;
-    height: 12px;
-    opacity: 1;
-  }
-  &:after {
-    margin: -2px;
-  }
-`;
-
-const StyledProgressBar = styled.div<{ active: boolean; transform: number }>`
-  height: 100%;
-  width: 100%;
-  display: grid;
-  align-items: center;
-  --bg-color: #535353;
-  --fg-color: #b3b3b3;
-  --progress-bar-height: 4px;
-  --progress-bar-radius: calc(var(--progress-bar-height) / 2);
-  --progress-bar-transform: 0;
-  --progress-bar-transform: ${(p) => `${p.transform}%`};
-  --progress-bar-transform-neg: ${(p) => `${-1 * p.transform}%`};
-`;
-
-const ProgressBarWrapper = styled.div`
-  width: 100%;
-  position: relative;
-  border-radius: var(--progress-bar-radius);
-  height: var(--progress-bar-height);
-`;
-
-const ProgressBarFGWrapper = styled.div`
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  border-radius: var(--progress-bar-radius);
-  height: var(--progress-bar-height);
-  width: 100%;
-`;
-const ProgressBarFG = styled.div<{ active: boolean }>`
-  -webkit-transform: translateX(-100%);
-  transform: translateX(-100%);
-  transform: translateX(var(--progress-bar-transform-neg));
-  background-color: var(--fg-color);
-  border-radius: var(--progress-bar-radius);
-  height: var(--progress-bar-height);
-  width: 100%;
-  ${(p) =>
-    p.active &&
-    css`
-      background-color: ${(p) => p.theme.colors.green1};
-    `}
-  &:active,
-  &:focus {
-    background-color: ${(p) => p.theme.colors.green1};
-  }
-`;
-const ProgressBarBG = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  border-radius: var(--progress-bar-radius);
-  background-color: ${(p) => p.theme.colors.gray3};
-  width: 100%;
-  height: var(--progress-bar-height);
-`;
-const ProgressBar: React.FC<{
-  progress: number;
-  setProgress: Dispatch<SetStateAction<number>>;
-}> = ({ setProgress, progress }) => {
-  const handleProgressClick = (
-    data:
-      | {
-          pageX: number;
-          bcr: { x: number; y: number; width: number };
-        }
-      | undefined
-  ) => {
-    if (data?.bcr && data?.pageX) {
-      console.log(data);
-      const { pageX, bcr } = data;
-      const zeroed = pageX - bcr.x;
-      const prog = (zeroed / bcr.width) * 100;
-      console.log(pageX, zeroed, prog, bcr, moving);
-      // const newPos = Math.min(Math.max(0, progress + delta), 100);
-      if (moving) {
-        setProgress(prog);
-      }
-    }
-  };
-  const onMouseMove = React.useMemo(() => {
-    const throttled = _.throttle((e) => {
-      return { pageX: e.pageX, bcr: e.target.getBoundingClientRect() };
-    }, 100);
-    return (e) => {
-      e.persist();
-      return throttled(e);
-    };
-  }, []);
-  const [active, setActive] = useState<boolean>(false);
-  const [moving, setMoving] = useState<boolean>(false);
-  return (
-    <ProgressBarWrapper
-      onBlur={(e) => {
-        setMoving(false);
-        //setActive(false);
-      }}
-      onFocus={(e) => {
-        setMoving(true);
-        setActive(true);
-      }}
-      onMouseUp={() => {
-        setMoving(false);
-      }}
-      onMouseDown={() => {
-        setMoving(true);
-      }}
-      onTouchStart={(e) => console.log(e)}
-      onTouchMove={(e) => console.log(e)}
-      onMouseOver={(e) => {
-        setActive(true);
-      }}
-    >
-      <StyledProgressBar
-        // @ts-ignore
-        active={active}
-        onClick={(e) => {
-          handleProgressClick(onMouseMove(e));
-        }}
-        onMouseMove={(e) => {
-          handleProgressClick(onMouseMove(e));
-        }}
-        transform={100 - progress}
-      >
-        <ProgressBarBG>
-          <ProgressBarFGWrapper
-            onMouseMove={(e) => {
-              handleProgressClick(onMouseMove(e));
-            }}
-            //onMouseMove={(e) => e.stopPropagation()}
-          >
-            <ProgressBarFG
-              // onMouseMove={(e) => e.stopPropagation()}
-              active={active}
-            />
-          </ProgressBarFGWrapper>
-          <Slider onMouseMove={(e) => e.stopPropagation()} active={active} />
-        </ProgressBarBG>
-      </StyledProgressBar>
-    </ProgressBarWrapper>
-  );
-};
 const PlaybarContainer = styled.div`
   display: grid;
   border-radius: 0.3rem;
