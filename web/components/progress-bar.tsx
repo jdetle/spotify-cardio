@@ -4,9 +4,8 @@ import {
   SliderRange,
   SliderHandle,
 } from "@reach/slider";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled, { css } from "styled-components";
-import { useTimeoutFn } from "react-use";
 
 const StyledSliderHandle = styled(SliderHandle)<{ active: boolean }>`
   position: absolute;
