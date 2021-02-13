@@ -66,6 +66,10 @@ img {
   display: block;
 }
 
+svg * {
+  fill: currentcolor;
+}
+
 input,
 button,
 textarea,

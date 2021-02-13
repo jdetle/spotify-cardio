@@ -13,6 +13,7 @@ import { AuthContext, SpotifyTokenType } from "pages/_app";
 import _ from "lodash";
 import ProgressBar from "components/progress-bar";
 import { darken } from "polished";
+import PlayerControls, { PlayerControlContainer } from "./player-controls";
 
 const IconButton = styled.button`
   background-color: transparent;
@@ -91,9 +92,10 @@ const VolumeIcon: React.FC<{
 };
 
 const VolumeSliderContainer = styled.div`
-  display: grid;
-  grid-template-columns: 2rem 1fr;
+  grid-template-columns: 0.5rem 1fr 1rem 1fr;
+  grid-column-gap: 0.5rem;
   grid-template-rows: 1fr;
+  grid-area: 1 / 1 / 2 / end2;
   justify-content: start;
   align-items: center;
   height: 100%;
@@ -101,13 +103,24 @@ const VolumeSliderContainer = styled.div`
   align-content: center;
 `;
 
+const VolumeIconWrapper = styled.div`
+  grid-area: 1 / 2 / 1 / end2;
+`;
+const ProgressBarWrapper = styled.div`
+  grid-area: 1 / 4 / 1 / end4;
+`;
+
 const VolumeSlider: React.FC = ({}) => {
   const defaultVolume = 50;
   const [volume, setVolume] = useState<number>(defaultVolume);
   return (
     <VolumeSliderContainer>
-      <VolumeIcon setVolume={setVolume} volume={volume} />
-      <ProgressBar progress={volume} setProgress={setVolume} />
+      <VolumeIconWrapper>
+        <VolumeIcon setVolume={setVolume} volume={volume} />
+      </VolumeIconWrapper>
+      <ProgressBarWrapper>
+        <ProgressBar progress={volume} setProgress={setVolume} />
+      </ProgressBarWrapper>
     </VolumeSliderContainer>
   );
 };
@@ -135,16 +148,26 @@ const PlaybarBGContainer = styled.div`
 `;
 */
 
+const ExtraActions = styled.div`
+  grid-template-columns: 1fr 1fr;
+`;
 const PlaybarContainer = styled.div`
   display: grid;
   border-radius: 0.3rem;
   width: 100%;
   display: grid;
-  padding-right: 1rem;
-  grid-template-columns: 1rem 1fr 8rem 1rem;
+  padding: 0rem 1rem 0rem 1rem;
+  grid-template-columns: 1rem 1fr 1fr 0.8fr 1rem;
   grid-template-rows: 1rem 1fr 3rem;
-  ${VolumeSliderContainer} {
-    grid-area: 1 / 3 / end3 / end3;
+  ${ExtraActions} {
+    grid-area: 1 / 4 / end3 / end4;
+    width: 100%;
+    height: 100%;
+  }
+  ${PlayerControlContainer} {
+    grid-area: 1 / 3 / 2 / 4;
+    justify-content: center;
+    place-content: cetner;
     width: 100%;
     height: 100%;
   }
@@ -206,51 +229,10 @@ const Playbar: React.FC = ({}) => {
   return (
     <Footer>
       <PlaybarContainer>
-        {/* <RadioGroup legend="Web Playback">
-          <RadioButton
-            disabled={playerState === null}
-            isActive={playerState != null && value === "play"}
-            onSelect={() => {
-              if (playerInstance && playerState) {
-                togglePlay({
-                  playerInstance,
-                  token: token as SpotifyTokenType,
-                  setToken,
-                }).then(() => {
-                  setValue("play");
-                });
-              }
-            }}
-          >
-            <FaPlay />
-          </RadioButton>
-          <RadioButton
-            disabled={playerState === null}
-            isActive={playerState != null && value === "pause"}
-            onSelect={() => {
-              if (playerInstance && token) {
-                pause({
-                  playerInstance,
-                  token: token as SpotifyTokenType,
-                }).then(() => setValue("paused"));
-              }
-            }}
-          >
-            <FaPause />
-          </RadioButton>
-
-          {playerState ? (
-            <PlayDetails
-              timestamp={playerState.timestamp}
-              position={playerState.position}
-              name={playerState?.track_window?.current_track.name ?? ""}
-              duration={playerState.duration}
-            ></PlayDetails>
-          ) : (
-            <></>
-          )}
-        </RadioGroup> */}
-        <VolumeSlider />
+        <PlayerControls {...playerState} />
+        <ExtraActions>
+          <VolumeSlider />
+        </ExtraActions>
       </PlaybarContainer>
     </Footer>
   );
