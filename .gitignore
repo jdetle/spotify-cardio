@@ -46,3 +46,6 @@ generated/
 secrets.env
 
 .vercel
+.DS_store
+**/**/.DS_store
+

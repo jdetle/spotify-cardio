@@ -73,6 +73,23 @@ export const pause = async ({
   }
 };
 
+export const resume = async ({ token }: { token: SpotifyTokenType }) => {
+  try {
+    const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.access_token}`,
+      },
+    });
+    if (res.status >= 400) {
+      return res;
+    }
+  } catch (e) {
+    return e;
+  }
+};
+
 export const play = async ({
   spotify_uri,
   playerInstance: {
@@ -98,36 +115,6 @@ export const play = async ({
         },
       }
     );
-    if (res.status >= 400) {
-      return res;
-    }
-  } catch (e) {
-    return e;
-  }
-};
-
-export const togglePlay = async ({
-  playerInstance: {
-    _options: { id },
-  },
-  token,
-}: {
-  playerInstance: PlayerInstance;
-  token: SpotifyTokenType;
-  setToken: Dispatch<SetStateAction<TokenTypes>>;
-}) => {
-  try {
-    const res = await fetch(
-      `https://api.spotify.com/v1/me/player/play?device_id=${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      }
-    );
-
     if (res.status >= 400) {
       return res;
     }

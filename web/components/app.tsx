@@ -39,26 +39,73 @@ const StyledApp = styled.div`
 
 const GlobalStyles = createGlobalStyle`
 ${normalize()};
-*{
-box-sizing: border-box;
-}
-html, body{
+html, body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: spotify-circular,spotify-circular-cyrillic,spotify-circular-arabic,spotify-circular-hebrew,Helvetica Neue,helvetica,arial,Hiragino Kaku Gothic Pro,Meiryo,MS Gothic,sans-serif;
   overflow: hidden;
-  margin: 0;
   height: 100%;
   background-color: #000;
+}
+body *,
+body ::before,
+body ::after {
   letter-spacing: -0.1em;
+  display: grid;
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+svg * {
+  fill: currentcolor;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+#__NEXT_DATA__ {
+  display: none;
 }
 #__next {
   height: 100%;  
   background-color: #000;
   overflow: hidden;
-}`;
+}
+
+
+
+
+`;
 
 const App = (props) => {
   return (

@@ -7,6 +7,7 @@ type PlayerState = {
   duration: number;
   is_playing: boolean;
   position: number;
+  progress_ms?: number;
   repeat_mode: number;
   restrictions: {
     disallow_resuming_reasons: Array<unknown>;
