@@ -253,18 +253,34 @@ const PlayerControls: React.FC = () => {
     PlayerContext
   );
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const [lastSpotifyUri, setLastSpotifyUri] = useState<string>("");
+  const [playerErrors, setPlayerErrors] = useState<Array<Error>>([]);
+  const [progressMs, setProgressMs] = useState<number>(0);
+  const [, /*lastSpotifyUri*/ setLastSpotifyUri] = useState<string>("");
   const [trackDuration, setTrackDuration] = useState<number>(0);
   const { token, setToken } = useContext(AuthContext);
-  console.log(lastSpotifyUri);
+  // console.log(lastSpotifyUri);
   useEffect(() => {
     let isSubscribed = true;
     const fetchActivePlayerState = async () => {
-      if (playerInstance && isSubscribed && token && playerActive) {
+      if (
+        playerInstance &&
+        isSubscribed &&
+        token &&
+        playerActive &&
+        playerErrors.length < 3
+      ) {
         const playerState = await getPlayerState({
           playerInstance,
           token: token as SpotifyTokenType,
         });
+        if (playerState?.status && playerState.status > 400) {
+          setPlayerErrors((errors) => {
+            const error = new Error(playerState?.status);
+            return errors.concat([error]);
+          });
+          return;
+        }
+        setProgressMs(playerState.progress_ms);
         setTrackDuration(playerState?.item?.duration_ms);
         setPlayerState(playerState);
         setLastSpotifyUri(playerState?.item?.uri);
@@ -276,7 +292,16 @@ const PlayerControls: React.FC = () => {
           playerInstance,
           token: token as SpotifyTokenType,
         });
-        setTrackDuration(playerState.duration);
+        if (playerState?.status && playerState.status > 400) {
+          setPlayerErrors((errors) => {
+            const error = new Error(playerState?.status);
+            return errors.concat([error]);
+          });
+          return;
+        }
+        if (playerState.duration) {
+          setTrackDuration(playerState.duration);
+        }
         setPlayerState(playerState);
         setLastSpotifyUri(playerState?.item?.uri);
       }
@@ -294,7 +319,7 @@ const PlayerControls: React.FC = () => {
     return new Date(timeDiff).toISOString().slice(14, 19); // HH:MM:SS
   };
 
-  let progress = ((playerState?.progress_ms ?? 0) / (trackDuration ?? 1)) * 100;
+  let progress = (progressMs ?? 0) / (trackDuration ?? 1);
   if (progress > 101) {
     progress = 0;
   }
@@ -329,7 +354,7 @@ const PlayerControls: React.FC = () => {
           {getProgressTime(playerState?.progress_ms ?? 0)}
         </ProgressTime>
         <ProgressBarWrapper>
-          <ProgressBar progress={progress} setProgress={() => {}} />
+          <ProgressBar progress={progress * 100} setProgress={() => {}} />
         </ProgressBarWrapper>
         <ProgressTime col={7}>
           {getProgressTime(trackDuration ?? 0)}
