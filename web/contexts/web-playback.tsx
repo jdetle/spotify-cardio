@@ -1,18 +1,30 @@
 import { AuthContext } from "pages/_app";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type PlayerContextType = {
   playerInstance: PlayerInstance | null;
+  playerActive: boolean;
+  setPlayerActive: Dispatch<SetStateAction<boolean>>;
 };
 
 export const PlayerContext = createContext<PlayerContextType>({
   playerInstance: null,
+  playerActive: false,
+  setPlayerActive: () => {},
 });
 const PlaybackEnabler: React.FC = ({ children }) => {
   const { token } = useContext(AuthContext);
   const [playerInstance, setPlayerInstance] = useState<PlayerInstance | null>(
     null
   );
+  const [playerActive, setPlayerActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (playerInstance == null) {
@@ -49,7 +61,10 @@ const PlaybackEnabler: React.FC = ({ children }) => {
 
         // Playback status updates
         player.addListener("player_state_changed", (state) => {
-          console.log(state);
+          if (playerActive == state.paused) {
+            console.log(playerActive, state);
+            setPlayerActive(true);
+          }
         });
 
         // Ready
@@ -79,7 +94,9 @@ const PlaybackEnabler: React.FC = ({ children }) => {
   }, [playerInstance, token]);
 
   return (
-    <PlayerContext.Provider value={{ playerInstance }}>
+    <PlayerContext.Provider
+      value={{ playerInstance, playerActive, setPlayerActive }}
+    >
       {children}
     </PlayerContext.Provider>
   );

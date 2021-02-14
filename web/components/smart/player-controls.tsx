@@ -1,12 +1,22 @@
 /* Progress bar, current play state, name of song, play, next, back */
 
 import ProgressBar from "components/progress-bar";
+import { PlayerContext } from "contexts/web-playback";
+import { AuthContext, SpotifyTokenType } from "pages/_app";
+import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
+import {
+  getPlayerState,
+  pause,
+  /* play, */ resume,
+} from "./playback-api-calls";
 
 type BackButttonProps = {
+  disabled: boolean;
   playPrev: () => void;
 };
 type NextButtonProps = {
+  disabled: boolean;
   playNext: () => void;
 };
 type Back15ButtonProps = {
@@ -18,11 +28,10 @@ type Forward15ButtonProps = {
   advance15: () => void;
 };
 type PlayPauseButtonProps = {
+  disabled: boolean;
   isPlaying: boolean;
-  pause: () => void;
-  play: () => void;
+  togglePlay: () => void;
 };
-type PlayDetailsProps = Partial<PlayerState>;
 
 const StyledBackButton = styled.button`
   color: #b3b3b3;
@@ -83,6 +92,13 @@ const StyledPlayPauseButton = styled.button`
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+  &:hover,
+  :active {
+    -webkit-transition: none;
+    transition: none;
+    -webkit-transform: scale(1.06);
+    transform: scale(1.06);
+  }
 `;
 
 const StyledNextButton = styled.button`
@@ -145,11 +161,19 @@ const Back15: React.FC<Back15ButtonProps> = ({}) => {
   );
 };
 
-const PlayPauseButton: React.FC<PlayPauseButtonProps> = ({}) => {
+const PlayPauseButton: React.FC<PlayPauseButtonProps> = ({
+  togglePlay,
+  isPlaying,
+  disabled,
+}) => {
   return (
-    <StyledPlayPauseButton>
+    <StyledPlayPauseButton disabled={disabled} onClick={togglePlay}>
       <svg role="img" height="16" width="16" viewBox="0 0 16 16">
-        <path d={`M4.018 14L14.41 8 4.018 2z`} />
+        {isPlaying ? (
+          <path d={`M3 2h3v12H3zM10 2h3v12h-3z`} />
+        ) : (
+          <path d={`M4.018 14L14.41 8 4.018 2z`} />
+        )}
       </svg>
     </StyledPlayPauseButton>
   );
@@ -180,8 +204,9 @@ const NextButton: React.FC<NextButtonProps> = ({}) => {
 const PlayerControlButtons = styled.div`
   margin-bottom: 12px;
   place-self: center;
+  place-content: center;
   width: 100%;
-  grid-template-columns: 2rem repeat(5, 1fr) 2rem;
+  grid-template-columns: 2em repeat(5, 1fr);
   grid-template-rows: 1rem 1fr 1rem;
 `;
 export const PlayerControlContainer = styled.div`
@@ -207,36 +232,108 @@ export const PlayerControlContainer = styled.div`
   }
 `;
 const PlaybackBar = styled.div`
-  grid-template-columns: 3rem 1fr 3rem;
+  grid-template-columns: 2rem repeat(5, 1fr) 2rem;
   align-self: center;
 `;
 const ProgressBarWrapper = styled.div`
+  grid-area: 1 / 2/ 1/ 7;
   place-self: center;
+  padding: 0 1rem 0 1rem;
   width: 100%;
 `;
-const ProgressTime = styled.div`
+const ProgressTime = styled.div<{ col: number }>`
   font-size: 0.8rem;
+  grid-column-start: ${(p) => p.col};
   text-align: center;
   color: ${(p) => p.theme.colors.gray4};
 `;
 
-const PlayerControls: React.FC<PlayDetailsProps> = (props) => {
-  const playing = props?.is_playing ?? false;
+const PlayerControls: React.FC = () => {
+  const { playerInstance, playerActive, setPlayerActive } = useContext(
+    PlayerContext
+  );
+  const [playerState, setPlayerState] = useState<PlayerState | null>(null);
+  const [lastSpotifyUri, setLastSpotifyUri] = useState<string>("");
+  const [trackDuration, setTrackDuration] = useState<number>(0);
+  const { token, setToken } = useContext(AuthContext);
+  console.log(lastSpotifyUri);
+  useEffect(() => {
+    let isSubscribed = true;
+    const fetchActivePlayerState = async () => {
+      if (playerInstance && isSubscribed && token && playerActive) {
+        const playerState = await getPlayerState({
+          playerInstance,
+          token: token as SpotifyTokenType,
+        });
+        setTrackDuration(playerState?.item?.duration_ms);
+        setPlayerState(playerState);
+        setLastSpotifyUri(playerState?.item?.uri);
+      }
+    };
+    const fetchPlayerState = async () => {
+      if (playerInstance && isSubscribed && token) {
+        const playerState = await getPlayerState({
+          playerInstance,
+          token: token as SpotifyTokenType,
+        });
+        setTrackDuration(playerState.duration);
+        setPlayerState(playerState);
+        setLastSpotifyUri(playerState?.item?.uri);
+      }
+    };
+    fetchPlayerState();
+    const timerID = setInterval(fetchActivePlayerState, 500);
+
+    return () => {
+      isSubscribed = false;
+      clearInterval(timerID);
+    };
+  }, [playerInstance, token, playerActive]);
+
+  const getProgressTime = (timeDiff: number) => {
+    return new Date(timeDiff).toISOString().slice(14, 19); // HH:MM:SS
+  };
+
+  let progress = ((playerState?.progress_ms ?? 0) / (trackDuration ?? 1)) * 100;
+  if (progress > 101) {
+    progress = 0;
+  }
   return (
     <PlayerControlContainer>
       <PlayerControlButtons>
-        <BackButton playPrev={() => {}} />
-        <Back15 disabled={false} back15={() => {}} />
-        <PlayPauseButton isPlaying={playing} play={() => {}} pause={() => {}} />
+        <BackButton disabled={playerInstance == null} playPrev={() => {}} />
+        <Back15 disabled={playerInstance == null} back15={() => {}} />
+        <PlayPauseButton
+          isPlaying={playerActive}
+          disabled={playerInstance == null}
+          togglePlay={() => {
+            if (playerInstance && token && setToken) {
+              let st = token as SpotifyTokenType;
+              if (playerActive) {
+                pause({ playerInstance, token: st });
+                setPlayerActive(false);
+              } else {
+                setPlayerActive(true);
+                resume({
+                  token: st,
+                });
+              }
+            }
+          }}
+        />
         <Forward15 disabled={false} advance15={() => {}} />
-        <NextButton playNext={() => {}} />
+        <NextButton disabled={playerInstance == null} playNext={() => {}} />
       </PlayerControlButtons>
       <PlaybackBar>
-        <ProgressTime>{`0:00`}</ProgressTime>
+        <ProgressTime col={1}>
+          {getProgressTime(playerState?.progress_ms ?? 0)}
+        </ProgressTime>
         <ProgressBarWrapper>
-          <ProgressBar progress={0} setProgress={() => {}} />
+          <ProgressBar progress={progress} setProgress={() => {}} />
         </ProgressBarWrapper>
-        <ProgressTime>{`10:00`}</ProgressTime>
+        <ProgressTime col={7}>
+          {getProgressTime(trackDuration ?? 0)}
+        </ProgressTime>
       </PlaybackBar>
     </PlayerControlContainer>
   );
